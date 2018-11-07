@@ -1,0 +1,11 @@
+---
+title: "732A51 Bioinformatics Lab 1"
+author: "Raymond Sseguya, Martin Smelik, Duc Duong"
+date: "2018 M11 7"
+output: pdf_document
+---
+
+# Task 2
+
+## 2.1
+
