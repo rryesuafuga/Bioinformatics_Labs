@@ -9,3 +9,30 @@ output: pdf_document
 
 ## 2.1
 
+A - Adenine
+T - Thymine
+G - Guanine
+C - Cytosin
+
+## 2.2
+
+M - Methionine
+V - Valine
+V - Valine
+A - Alanine
+
+## 2.3
+
+We can see this nucleotide sequence in gene.txt file.
+
+## 2.4
+
+The obtained sequence is different to the one we were provided but after reversing and taking the complement we got exactly the same sequence as we were provided, shown in outseq.txt file. This happend because every DNA has two components, following the rule that T, A and C, G are complementary. It also depends from which end the sequence start and that is why reversing is sometimes necessary.
+
+## 2.5
+
+number range: 1..5662
+stop codon: ????
+chromosome="I"
+
+# Task 3
