@@ -5,6 +5,68 @@ date: "2018 M11 7"
 output: pdf_document
 ---
 
+
+# Task 1
+
+## Task 1.1
+
+diploid population = Aa,Aa = 2N (parents)
+
+After random mating for first generation: children = AA, Aa, aA, aa
+
+
+Total new first gneration population = 4
+
+Number of AA homozygtes = 1
+
+Number of aa homozygotes = 1
+
+Number of Aa or aA hereterozygotes = 2
+
+Proportion of AA homozygtes = 1/4 = 0.25
+
+Proportion of aa homozygotes = 1/4 = 0.25
+
+Proportion of Aa or aA hereterozygotes = 2/4 = 0.5
+
+
+
+The proportion AA Homozygotes : Aa Heterozygotes : aa homozygotes is 
+
+0.25: 0.5 : 0.25
+
+
+
+Again after random mating for first generation:
+
+
+Probability of getting A allele = 3/6 = 0.5 = p
+
+
+Probability of getting a allele = 3/6 = 0.5 = q
+
+The proportion AA Homozygotes : Aa Heterozygotes : aa homozygotes is also
+square of p : 2 times p times q : square of q
+
+(0.5)^2 : 2 times 0.5 times 0.5 : (0.5)^2
+
+0.25: 0.5 : 0.25
+
+
+
+This satisfies the Hardy Weinberg equilibrium.
+
+
+
+### Task 1.1.b
+
+The probabibility of getting A allele and a allele will remain the same with continued random mating therefore the Hardy Weinberg equilibrium will always hold.
+
+
+
+
+
+
 # Task 3
 
 ## 3.1
