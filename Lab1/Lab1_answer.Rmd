@@ -46,6 +46,7 @@ Probability of getting A allele = 3/6 = 0.5 = p
 Probability of getting a allele = 3/6 = 0.5 = q
 
 The proportion AA Homozygotes : Aa Heterozygotes : aa homozygotes is also
+
 square of p : 2 times p times q : square of q
 
 (0.5)^2 : 2 times 0.5 times 0.5 : (0.5)^2
@@ -64,6 +65,34 @@ The probabibility of getting A allele and a allele will remain the same with con
 
 
 
+## Task 1.2
+
+
+Total number of people = 357 + 485 + 158 = 1000
+
+Total allele population = 2 times 1000 = 2000
+
+Total number of M is 2 times 357 added to 485 = 1199
+
+Total number of N is 2 times 158 added to 485 = 801
+
+Probability of getting M is 1199 out of 2000 = 0.5995 (assuming diploid)
+
+Probability of getting N is 801 out of 2000 = 0.4005 (assuming diploid)
+
+Creating vector of number of homozygotes and heterozygotes, R
+
+Creating vector of Probabilities of M and N alleles, S
+
+```{r}
+R <- c(357, 485, 158)
+S <- c(0.5995*0.5995, 2*0.5995*0.4005, 0.4005*0.4005)
+
+chisq.test(R, p=S)
+
+```
+
+The null hypothesis under the chi-square test for goodness of fit, that the population follows the Hardy Weinberg equilibrium, IS ACCEPTED.
 
 
 
