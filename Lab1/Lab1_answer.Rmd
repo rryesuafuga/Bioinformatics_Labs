@@ -127,7 +127,7 @@ After reversing and complementing, the nucleotide sequence is in the 3' to 5' pr
 
 ## 3.1
 
-According to Wikipedia, C. elegans is being extensively used as a model organism.It was the first multicellular organism to have its whole genome sequenced, and as of 2012, is the only organism to have its connectome (neuronal "wiring diagram") completed. The C. elegans genome contains an estimated 20,470 protein-coding genes.[95] About 35% of C. elegans genes have human homologs. Remarkably, human genes have been shown repeatedly to replace their C. elegans homologs when introduced into C. elegans. Conversely, many C. elegans genes can function similarly to mammalian genes.
+According to Wikipedia, C. elegans is being extensively used as a model organism.It was the first multicellular organism to have its whole genome sequenced, and as of 2012, is the only organism to have its connectome (neuronal "wiring diagram") completed. The C. elegans genome contains an estimated 20,470 protein-coding genes. About 35% of C. elegans genes have human homologs. Remarkably, human genes have been shown repeatedly to replace their C. elegans homologs when introduced into C. elegans. Conversely, many C. elegans genes can function similarly to mammalian genes.
 
 
 ## 3.2
