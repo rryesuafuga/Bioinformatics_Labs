@@ -96,6 +96,37 @@ The null hypothesis under the chi-square test for goodness of fit, that the popu
 
 
 
+# Task 2
+
+## Task 2.1
+
+According to the information in the FEATURES section, the protein product is **RecQ type DNA helicase**
+
+## Task 2.2
+
+The first four amino acids are MVVA, which is **Methionine, Valine, Valine and Alanine**
+
+## Task 2.3
+
+Done.
+
+## Task 2.4
+
+The coding strand sequence obtained from using "backtranseq" exactly matches the nucleotide sequence provided. For instance, the last letter **"D"** representing **Aspartic acid** exactly macthes the last three letter sequence **"GAT"**
+
+After reversing and complementing, the nucleotide sequence is in the 3' to 5' prime direction but amino acid contents are exactly the same. For example, the third amino acid in the reversed and complemented nucleotide sequence is **"AAC"** which is the same as the **"GTT"** in the sequence produced by "backtranseq", which is also the same as **"V"**. 
+
+## Task 2.5
+
+
+
+
+
+
+
+
+
+
 # Task 3
 
 ## 3.1
