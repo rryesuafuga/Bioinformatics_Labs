@@ -108,7 +108,7 @@ The first four amino acids are MVVA, which is **Methionine, Valine, Valine and A
 
 ## Task 2.3
 
-Done.
+Attached "after_backtranseq.FASTA"
 
 ## Task 2.4
 
@@ -116,9 +116,12 @@ The coding strand sequence obtained from using "backtranseq" exactly matches the
 
 After reversing and complementing, the nucleotide sequence is in the 3' to 5' prime direction but amino acid contents are exactly the same. For example, the third amino acid in the reversed and complemented nucleotide sequence is **"AAC"** which is the same as the **"GTT"** in the sequence produced by "backtranseq", which is also the same as **"V"**. 
 
+Attached is "after_reverse_complement.FASTA"
+
+
 ## Task 2.5
 
-**???**
+The nucleotide number range is **1 to 5661** and there is no stop codon which means that the gene is incomplete. The genome lies on chromosome *I*.
 
 
 
@@ -132,7 +135,7 @@ According to Wikipedia, C. elegans is being extensively used as a model organism
 
 ## 3.2
 
-Done. Attached.
+![**using BLAST tool**](after_BLAST.jpg)
 
 
 ## 3.3
@@ -146,7 +149,7 @@ However, the two look exactly the same in the Genome Data Viewer.
 
 ## 3.4
 
-The query sequence is found on chromosome V and position **????**
+The query sequence is found on chromosome V and positions are **6936 to 7110 for exon **, **7158 to 7393 for exon 2**, **7433 to 7609 for exon 3**, and **7651 to 7818 for exon 4**
 
 
 ## 3.5
