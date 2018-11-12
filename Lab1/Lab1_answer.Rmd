@@ -135,7 +135,13 @@ According to Wikipedia, C. elegans is being extensively used as a model organism
 
 ## 3.2
 
+\
+\
+
 ![**using BLAST tool**](after_BLAST.jpg)
+\
+\
+
 
 
 ## 3.3
