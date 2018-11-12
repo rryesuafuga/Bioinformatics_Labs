@@ -160,7 +160,7 @@ The query sequence is found on chromosome V and positions are **6936 to 7110 for
 
 ## 3.5
 
-M  R  T  D  V  G  S  I  P  L  M  C  I  L  S  T  L T  T  G  V  F  G  Y  L  P  T  E  D  L  T  N  S  I  I  S  G  N  G  G  Y  P  V  P  P  D  T  I  I  P  A  D  G  D  E  E 
+???? 
 
 
 
