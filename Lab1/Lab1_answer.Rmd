@@ -176,9 +176,6 @@ protein code of exon 4:
 
 ## 3.6
 
-The lineage is Eukaryota; Metazoa; Ecdysozoa; Nematoda; Chromadorea; Rhabditida; Rhabditoidea; Rhabditidae; Peloderinae; Caenorhabditis. It is a **protein coding gene type**.
-
-
-
+The symbol of the gene is ife-3. It is located on chromosome V and has 4 exon as we could see also in the earlier excercises. Interesting information about this gene is that except of some simple organisms, also Eukaryots have it and therefore also humans. This gene mediates the mRNA, that do not content spliced-leader sequence to ribosomes.
 
 
