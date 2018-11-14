@@ -172,7 +172,9 @@ protein code of exon 4:
 **YEVHKDSSARTSSTVKPRICLPAKDPAPVKEKGPAATTSPSNPGTEATGTSPATPTP***
 
 
+When compare these protein codes with the one in question 2 - [FASTA version link](https://www.ncbi.nlm.nih.gov/nuccore/CU329670.1?report=fasta&to=5662)
 
+We see that there is no relevent between these code.
 
 ## 3.6
 
