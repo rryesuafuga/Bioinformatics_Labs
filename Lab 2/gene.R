@@ -32,7 +32,7 @@ simulate_gene <- function(template_gene)
 }
 
 
-simuate_gene(lizards_sequences)
+simulate_gene(lizards_sequences)
 ai_gene_1.1 <- read.fasta("AI_gene.fasta")
 
 #1.2
