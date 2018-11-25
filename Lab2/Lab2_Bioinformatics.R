@@ -21,7 +21,8 @@ for(i in 1:length(lizard_seq_seqinr)){
   
 }
 
-ape::write.dna(lizards_sequences, file ="artificial_lizard_seqs.fasta", format = "fasta", append =FALSE, nbcol = 6, colsep = " ", colw = 10)
+# need to change writing method
+ape::write.dna(artificialseq, file ="artificial_lizard_seqs.fasta", format = "fasta", append =FALSE, nbcol = 6, colsep = " ", colw = 10)
 
 
 
