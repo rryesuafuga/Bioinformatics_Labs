@@ -2,6 +2,7 @@
 library(ape)
 library(seqinr)
 library(phangorn)
+library(markovchain)
 
 
 lizard_seq_seqinr <- read.fasta(file = "lizard_seqs.fasta", seqtype = "DNA",
@@ -106,4 +107,16 @@ GC.content(as.DNAbin(lizard_artificial_2))
 
 
 ## 2.2
+
+lizards_sequences_markov <- 
+  markovchainListFit(data=lizards_sequences, name = "lizards_sequences_markov")
+
+artificial_markov <- 
+  markovchainListFit(data=lizard_artificial, name = "lizard_artificial")
+
+artificial_markov_2 <- 
+  markovchainListFit(data=lizard_artificial_2, name = "lizard_artificial_2")
+### I get a very large list
+
+
 
