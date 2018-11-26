@@ -3,7 +3,7 @@ library(ape)
 library(seqinr)
 library(phangorn)
 library(markovchain)
-
+library(msa)
 
 
 
@@ -41,6 +41,7 @@ for(i in 1:33){
 ape::write.dna(lizard_artificial, file ="lizard_artificial.fasta", 
         format = "fasta", append =FALSE, nbcol = 6, colsep = " ", colw = 10)
 
+ape::base.freq(as.DNAbin(lizard_artificial), freq = FALSE, all = FALSE)
 
 
 ### My method
@@ -64,8 +65,6 @@ ape::write.dna(lizard_artificial, file ="lizard_artificial.fasta",
 #             file.out="artificial_lizard_seqs.fasta")
 
 
-### Comment on base composition
-
 
 
 ## Question 1.2
@@ -83,6 +82,8 @@ for(i in 1:33){
 
 ape::write.dna(lizard_artificial_2, file ="lizard_artificial_2.fasta", 
                format = "fasta", append =FALSE, nbcol = 6, colsep = " ", colw = 10)
+
+ape::base.freq(as.DNAbin(lizard_artificial_2), freq = FALSE, all = FALSE)
 
 
 
@@ -123,33 +124,34 @@ GC.content(as.DNAbin(lizard_artificial_2))
 
 ## 2.2
 
-# lizards_sequences_markov <- 
-#   markovchainListFit(data=lizards_sequences, name = "lizards_sequences_markov")
-# 
-# artificial_markov <- 
-#   markovchainListFit(data=lizard_artificial, name = "lizard_artificial_markov")
-# 
-# artificial_markov_2 <- 
-#   markovchainListFit(data=lizard_artificial_2, name = "lizard_artificial_2_markov")
-
-
 markovchainFit(data=lizards_sequences)
-markovchainFit(data=unlist(lizard_artificial))
+markovchainFit(data=lizard_artificial)
 markovchainFit(data=unlist(lizard_artificial_2))
 
 
 
 ## 2.3 
 
-library(msa)
-vignette("msa")
-example("msa")
-mySequenceFile <- system.file("examples", "lizard_seqs.fasta", package="msa")
-mySequences <- readAAStringSet(mySequenceFile)
-mySequences
-msa(mySequences, "ClustalW")
+real_align <- msaClustalW("lizard_seqs.fasta",type="dna") 
+real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
+dist_real <- as.matrix(dist.alignment(real_alignseq, "identity"))
+heatmap(dist_real)
 
-File_artificial_msa <- system.file("examples", "lizard_artificial.fasta", package="msa")
-myArtificialSequences <- readAAStringSet(File_artificial_msa)
-myArtificialSequences
-msa(myArtificialSequences, "ClustalW")
+artificial_align <- msaClustalW("lizard_artificial.fasta",type="dna") 
+artificial_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
+dist_artificial <- as.matrix(dist.alignment(real_alignseq, "identity"))
+heatmap(dist_artificial)
+
+
+
+# Assignment 3
+
+## 3.1
+
+treeUPGMA <- upgma(dist_real)
+treeNJ <- upgma(dist_real)
+layout(matrix(c(1,2), 2, 1), height=c(1,2))
+par(mar = c(0,0,2,0)+ 0.1)
+plot(treeUPGMA, main="UPGMA")
+plot(treeNJ, "unrooted", main="NJ")
+ape::boot.phylo(treeUPGMA)
