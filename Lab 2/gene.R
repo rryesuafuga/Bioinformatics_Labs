@@ -2,7 +2,22 @@ library(ape)
 library(seqinr)
 
 #1.1
+
+clean <- function(template_gene){
+  nucleotide <- c("a", "t", "g", "c")
+  for (i in 1:length(template_gene)) {
+    #Remove the " " that created when reading a file
+    template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
+    #Remove the character that not nucleotide (eg: name of species...)
+    template_gene[[i]] <- template_gene[[i]][match(template_gene[[i]], nucleotide)]
+  }
+  return(template_gene)
+}
+
+
 lizards_sequences <-  read.fasta("lizard_seqs.fasta")
+lizards_sequences <- clean(lizards_sequences)
+
 
 simulate_gene <- function(template_gene)
   {
@@ -19,8 +34,8 @@ simulate_gene <- function(template_gene)
     this_compotision = seqinr::count(template_sequence,1)/this_leng
     
     #generate a new sequence base on sample function
-    this_sequence <- sample(nucleotide, prob = this_compotision, replace = TRUE)
-    print(this_sequence)
+    this_sequence <- sample(nucleotide, size=this_leng ,prob = this_compotision, replace = TRUE)
+    #print(this_sequence)
     
     #add to list
     ai_gene[i] <- list(this_sequence)
@@ -34,6 +49,8 @@ simulate_gene <- function(template_gene)
 
 simulate_gene(lizards_sequences)
 ai_gene_1.1 <- read.fasta("AI_gene.fasta")
+ai_gene_1.1 <- clean(ai_gene_1.1)
+
 
 #1.2
 tree <- rtree(length(lizards_sequences))
@@ -58,14 +75,14 @@ for (i in 1:4) {
 #print the rates
 rates
 #create the ai_gene 2
-ai_gene_1.2 <- simSeq(tree, l = 1000, Q=rates , type = "DNA")
+ai_gene_1.2 <- phangorn::simSeq(tree, l = 1000, Q=rates , type = "DNA")
 
 #rename 
 for (i in 1:length(ai_gene_1.2)){
-  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == "1"] = "a"
-  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == "2"] = "c"
-  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == "3"] = "g"
-  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == "4"] = "t"
+  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == 1] = "a"
+  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == 2] = "c"
+  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == 3] = "g"
+  ai_gene_1.2[[i]][ai_gene_1.2[[i]] == 4] = "t"
 }
 
 ape::write.dna(ai_gene_1.2, file ="AI_gene2.fasta", format = "fasta", colsep =" ")
@@ -86,5 +103,12 @@ for (i in 1:length(lizards_sequences)) {
   
   cat("\n")
 }
+
+
+#2.2
+library(markovchain)
+markovchainFit(lizards_sequences)
+markovchainFit(ai_gene_1.1)
+markovchainFit(ai_gene_1.2)
 
 
