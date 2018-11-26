@@ -89,6 +89,21 @@ write.fasta(sequences=from_tree,
 
 
 
-# Question 2
+# Assignment 2
 
-## 
+## 2.1
+
+ape::base.freq(as.DNAbin(lizard_artificial), freq = FALSE, all = FALSE)
+GC.content(as.DNAbin(lizard_artificial))
+
+ape::base.freq(as.DNAbin(lizard_artificial_2), freq = FALSE, all = FALSE)
+GC.content(as.DNAbin(lizard_artificial_2))
+
+### How do we know whether to choose Homosapien or anything else?
+### The results are not similar
+### There are many stop codons marked by stars
+### Yes. There are many stop codons in the true sequence
+
+
+## 2.2
+
