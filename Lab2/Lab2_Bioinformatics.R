@@ -39,7 +39,7 @@ for(i in 1:33){
 # print(lizard_artificial)
 
 ape::write.dna(lizard_artificial, file ="lizard_artificial.fasta", 
-        format = "fasta", append =FALSE, nbcol = 6, colsep = " ", colw = 10)
+        format = "fasta", append =FALSE, nbcol = 6, colsep = "", colw = 10)
 
 ape::base.freq(as.DNAbin(lizard_artificial), freq = FALSE, all = FALSE)
 
@@ -81,7 +81,7 @@ for(i in 1:33){
 # print(lizard_artificial_2)
 
 ape::write.dna(lizard_artificial_2, file ="lizard_artificial_2.fasta", 
-               format = "fasta", append =FALSE, nbcol = 6, colsep = " ", colw = 10)
+               format = "fasta", append =FALSE, nbcol = 6, colsep = "", colw = 10)
 
 ape::base.freq(as.DNAbin(lizard_artificial_2), freq = FALSE, all = FALSE)
 
@@ -99,7 +99,7 @@ from_tree <- simSeq(tree, l = l2, type="DNA", bf=as.vector(bc2), Q=Q2)
 
 write.fasta(sequences=from_tree,
             names=names(lizard_artificial_2),
-            file.out="from_tree.fasta")
+            file.out="from_tree.fasta", colsep ="")
 
 ### will come back to this later
 
