@@ -22,7 +22,7 @@ ape::write.dna(lizards_sequences, file ="lizard_seqs.fasta", format = "fasta", a
 
 #1.1
 clean <- function(template_gene){
-  nucleotide <- c("a", "t", "g", "c")
+  nucleotide <- c("a", "c", "g", "t")
   for (i in 1:length(template_gene)) {
     #Remove the " " that created when reading a file
     template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
