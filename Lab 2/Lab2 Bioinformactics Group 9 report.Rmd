@@ -40,13 +40,11 @@ We created a function called simulate_gene, which take the lizards sequences as 
 
 ```{r}
 #1.1
+set.seed(123)
 clean <- function(template_gene){
-  nucleotide <- c("a", "t", "g", "c")
   for (i in 1:length(template_gene)) {
     #Remove the " " that created when reading a file
     template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
-    #Remove the character that not nucleotide (eg: name of species...)
-    template_gene[[i]] <- template_gene[[i]][match(template_gene[[i]], nucleotide)]
   }
   return(template_gene)
 }
@@ -60,7 +58,7 @@ simulate_gene <- function(template_gene)
 {
   ai_gene <- list()
   gene_num <- length(template_gene)
-  nucleotide <- c("a", "t", "g", "c")
+  nucleotide <- c("a", "c", "g", "t")
   
   #Scan all gene and get some information
   for (i in 1:gene_num) {
@@ -69,9 +67,10 @@ simulate_gene <- function(template_gene)
     #get leng and base compotision of gene
     this_leng <- length(template_sequence)
     this_compotision = seqinr::count(template_sequence,1)/this_leng
+    #print(this_compotision)
     
     #generate a new sequence base on sample function
-    this_sequence <- sample(nucleotide, size=this_leng ,prob = this_compotision, replace = TRUE)
+    this_sequence <- sample(nucleotide, size=this_leng ,prob = as.vector(this_compotision), replace = TRUE)
     #print(this_sequence)
     
     #add to list
@@ -79,21 +78,17 @@ simulate_gene <- function(template_gene)
   }
   
   #write to a file
-  ape::write.dna(ai_gene, file ="AI_gene.fasta", format = "fasta", colsep =" ")
+  ape::write.dna(ai_gene, file ="AI_gene.fasta", format = "fasta", colsep ="")
   return("Created an AI gene and saved in file: AI_gene.fasta")
 }
 
-
 simulate_gene(lizards_sequences)
-
-
 
 ```
 
 Each sequence of the AI simulated gene has the same base composition with the original gene. For example, here is the base composition of the first sequence:
 
 ```{r}
-
 ai_gene_1.1 <- read.fasta("AI_gene.fasta")
 ai_gene_1.1 <- clean(ai_gene_1.1)
 
@@ -104,7 +99,7 @@ print("Base composition of the first sequence of the AI gene: ")
 print(count(ai_gene_1.1[[1]],1)/length(ai_gene_1.1[[1]]))
 
 ```
-
+The composition is quite similar. There is a small different because the ai_gene only have "a" "g" "c" or "t". While the original gene rearly has "y", "m", "r"...
 
 ##1.2 Artificial DNA sequence dataset using phangorn::simSeq() function.
 Here is the phylogenetic tree with 33 tips:
@@ -114,7 +109,7 @@ tree <- rtree(length(lizards_sequences))
 plot(tree)
 ```
 
-Then, we create a transition Q matrix base of random number from 0.22 to 0.28. Which quite similar with the true number of the real data.
+Then, we create a transition Q matrix base on random number around 0.25. Which quite similar with the true number of the real data. Here is our matrix rates
 
 ```{r}
 
@@ -160,13 +155,14 @@ ape::write.dna(ai_gene_1.2, file ="AI_gene2.fasta", format = "fasta", colsep =""
 
 ## Question2: Sequence analysis
 ### 2.1: Report some basic statistics
-Here is some basic statistics as the requirements:
+Here is some basic statistics as the requirements for the frist sequence of each gene:
 ```{r}
 #2.1
 ai_gene_1.2 <- read.fasta("AI_gene2.fasta")
 ai_gene_1.2 <- clean(ai_gene_1.2)
 
-for (i in 1:length(lizards_sequences)) {
+#for (i in 1:length(lizards_sequences)) {
+for (i in 1:1) {
   cat(paste("For the sequences number: ", i , "\n"))
   print("The composition of lizards dataset:")
   print(round(count(lizards_sequences[[i]],2)/length(lizards_sequences[[i]]), 4))
@@ -183,6 +179,8 @@ for (i in 1:length(lizards_sequences)) {
 
 ```
 
+We can see that the composition for two nucleotide of Ai genes are not similar with the original sequence. It's understandable 
+
 ###2.2: Markov chain
 We decided to use the `markovchain` library to fit the markovchanin model. Here is the resutl:
 
@@ -193,13 +191,14 @@ markovchainFit(ai_gene_1.1)
 markovchainFit(ai_gene_1.2)
 ```
 
-Markov chain order: I'll do it later. There is an error in here
+Markov chain order: We use the ``fitHigherOrder`` funcion. Based on the below result (for the first sequences), we concluded that all genes have a high order. Maybe because we only have 4 nucleotide.
 
-```{r, eval=FALSE}
+```{r}
 #2.2
 #The fitHigherOrder function work only with a list, not list of list
-#So, my idea is take some random sequences, see the order and then make the conclusion 
 fitHigherOrder(lizards_sequences[[1]])
+fitHigherOrder(ai_gene_1.1[[1]])
+fitHigherOrder(ai_gene_1.2[[1]])
 
 ```
 
@@ -210,30 +209,29 @@ We use the `msa` library to align the sequences, then calculate the distantce an
 ```{r}
 #2.3
 library(msa)
-
+#Original
 real_align <- msaClustalW("lizard_seqs.fasta",type="dna") 
 real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
 dist_real <- as.matrix(dist.alignment(real_alignseq, "identity"))
-heatmap(dist_real)
 
-
+#Ai 1
 ai1.1_align <- msaClustalW("AI_gene.fasta",type="dna") 
 ai1.1_alignseq <- msaConvert(ai1.1_align, type="seqinr::alignment") 
 dist_a1.1 <- as.matrix(dist.alignment(ai1.1_alignseq, "identity"))
-heatmap(dist_a1.1)
 
+#AI 2
 ai1.2_align <- msaClustalW("AI_gene2.fasta",type="dna") 
 ai1.2_alignseq<- msaConvert(ai1.2_align, type="seqinr::alignment") 
 dist_a1.2 <- as.matrix(dist.alignment(ai1.2_alignseq, "identity"))
+
+heatmap(dist_real)
+heatmap(dist_a1.1)
 heatmap(dist_a1.2)
-
-
 ```
  
 As we can see that the values in heatmap of AI simulated sequences are quite low. It means that the AI simulated gene has low (or no) connections with each other (because it randomly created) while the original gene is highly connected.
 
 ##Question 3: Phylogeny reconstruction
-
 ```{r include=TRUE, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 
 #3.1

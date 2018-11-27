@@ -21,13 +21,15 @@ print(lizards_sequences)
 ape::write.dna(lizards_sequences, file ="lizard_seqs.fasta", format = "fasta", append =FALSE, nbcol = 6, colsep = "", colw = 10)
 
 #1.1
+set.seed(123)
 clean <- function(template_gene){
   nucleotide <- c("a", "c", "g", "t")
   for (i in 1:length(template_gene)) {
     #Remove the " " that created when reading a file
     template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
+    #template_gene[[i]] <- as.vector(template_gene[[i]])
     #Remove the character that not nucleotide (eg: name of species...)
-    template_gene[[i]] <- template_gene[[i]][match(template_gene[[i]], nucleotide)]
+    template_gene[[i]] <- template_gene[[i]][grepl(paste0(nucleotide, collapse = "|"), template_gene[[i]])]
   }
   return(template_gene)
 }
@@ -41,7 +43,7 @@ simulate_gene <- function(template_gene)
 {
   ai_gene <- list()
   gene_num <- length(template_gene)
-  nucleotide <- c("a", "t", "g", "c")
+  nucleotide <- c("a", "c", "g", "t")
   
   #Scan all gene and get some information
   for (i in 1:gene_num) {
@@ -50,9 +52,10 @@ simulate_gene <- function(template_gene)
     #get leng and base compotision of gene
     this_leng <- length(template_sequence)
     this_compotision = seqinr::count(template_sequence,1)/this_leng
+    #print(this_compotision)
     
     #generate a new sequence base on sample function
-    this_sequence <- sample(nucleotide, size=this_leng ,prob = this_compotision, replace = TRUE)
+    this_sequence <- sample(nucleotide, size=this_leng ,prob = as.vector(this_compotision), replace = TRUE)
     #print(this_sequence)
     
     #add to list
@@ -60,7 +63,7 @@ simulate_gene <- function(template_gene)
   }
   
   #write to a file
-  ape::write.dna(ai_gene, file ="AI_gene.fasta", format = "fasta", colsep =" ")
+  ape::write.dna(ai_gene, file ="AI_gene.fasta", format = "fasta", colsep ="")
   return("Created an AI gene and saved in file: AI_gene.fasta")
 }
 
@@ -68,6 +71,14 @@ simulate_gene <- function(template_gene)
 simulate_gene(lizards_sequences)
 ai_gene_1.1 <- read.fasta("AI_gene.fasta")
 ai_gene_1.1 <- clean(ai_gene_1.1)
+
+
+#report composition
+print("Base composition of the first sequence of the original gene: ")
+print(count(lizards_sequences[[1]],1)/length(lizards_sequences[[1]]))
+
+print("Base composition of the first sequence of the AI gene: ")
+print(count(ai_gene_1.1[[1]],1)/length(ai_gene_1.1[[1]]))
 
 
 #1.2
@@ -108,19 +119,19 @@ ape::write.dna(ai_gene_1.2, file ="AI_gene2.fasta", format = "fasta", colsep =""
 #2.1
 ai_gene_1.2 <- read.fasta("AI_gene2.fasta")
 
-for (i in 1:length(lizards_sequences)) {
-  cat(paste("For the sequences number: ", i , "\n"))
-  print("The composition of lizards dataset:")
-  print(round(count(lizards_sequences[[i]],2)/length(lizards_sequences[[i]]), 4))
-  
-  print("The composition of AI_gene1 dataset:")
-  print(round(count(ai_gene_1.1[[i]],2)/length(ai_gene_1.1[[i]]), 4))
-  
-  print("The composition of Ai_gene2 dataset:")
-  print(round(count(ai_gene_1.2[[i]],2)/length(ai_gene_1.2[[i]]), 4))
-  
-  cat("\n")
-}
+# for (i in 1:length(lizards_sequences)) {
+#   cat(paste("For the sequences number: ", i , "\n"))
+#   print("The composition of lizards dataset:")
+#   print(round(count(lizards_sequences[[i]],2)/length(lizards_sequences[[i]]), 4))
+#   
+#   print("The composition of AI_gene1 dataset:")
+#   print(round(count(ai_gene_1.1[[i]],2)/length(ai_gene_1.1[[i]]), 4))
+#   
+#   print("The composition of Ai_gene2 dataset:")
+#   print(round(count(ai_gene_1.2[[i]],2)/length(ai_gene_1.2[[i]]), 4))
+#   
+#   cat("\n")
+# }
 
 
 #2.2
@@ -139,17 +150,22 @@ library(msa)
 #vignette("msa")
 #example("msa")
 #Remember that the fasta file in here should not have any space (colsep ="" when write)
-mySequenceFile <- system.file("examples", "lizard_seqs.fasta", package="msa")
-mySequences <- readAAStringSet(mySequenceFile)
-mySequences
+# real_align <- msaClustalW("lizard_seqs.fasta",type="dna") 
+# real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
+# dist_real <- as.matrix(dist.alignment(real_alignseq, "identity"))
+# heatmap(dist_real)
+# 
+# 
+# ai1.1_align <- msaClustalW("AI_gene.fasta",type="dna") 
+# ai1.1_alignseq <- msaConvert(ai1.1_align, type="seqinr::alignment") 
+# dist_a1.1 <- as.matrix(dist.alignment(ai1.1_alignseq, "identity"))
+# heatmap(dist_a1.1)
+# 
+# ai1.2_align <- msaClustalW("AI_gene2.fasta",type="dna") 
+# ai1.2_alignseq<- msaConvert(ai1.2_align, type="seqinr::alignment") 
+# dist_a1.2 <- as.matrix(dist.alignment(ai1.2_alignseq, "identity"))
+# heatmap(dist_a1.2)
 
-
-real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
-dist_real <- as.matrix(dist.alignment(real_alignseq, "identity"))
-
-plot_ly(x=colnames(dist_real), y=rownames(dist_real), 
-        z=dist_real, type="heatmap", colors =colorRamp(c("yellow", "red")))%>% 
-  layout(title = "Heatmap of the Lizard sequences")
 
 #Do the same thing with 2 other sequences. 
 #You can see that the value in heatmap of AI sequences is quite low
