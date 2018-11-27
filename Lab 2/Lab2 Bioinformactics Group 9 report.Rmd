@@ -1,3 +1,12 @@
+---
+title: "Lab2 732A51 Bioinformatics Group 9"
+author: "Duc Duong, Martin Smelik, Raymond Sseguya"
+date: "2018 M11 27"
+output: pdf_document
+---
+
+```{r include=TRUE, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+
 library(ape)
 library(seqinr)
 library(phangorn)
@@ -136,12 +145,7 @@ fitHigherOrder(lizards_sequences[[1]])
 
 #2.3
 library(msa)
-#vignette("msa")
-#example("msa")
 #Remember that the fasta file in here should not have any space (colsep ="" when write)
-mySequenceFile <- system.file("examples", "lizard_seqs.fasta", package="msa")
-mySequences <- readAAStringSet(mySequenceFile)
-mySequences
 
 
 real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
@@ -165,3 +169,7 @@ plot(treeUPGMA, main="UPGMA")
 plot(treeNJ, "unrooted", main="NJ")
 
 #haven't done the last question
+
+
+```
+
