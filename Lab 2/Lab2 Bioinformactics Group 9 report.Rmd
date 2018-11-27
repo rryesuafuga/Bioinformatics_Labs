@@ -36,7 +36,7 @@ print(lizards_sequences)
 
 ```
 
-We create a function called simulate_gene, which take the lizards sequences as the input and simulate an AI gene base on the original sequences. When calling the function, AI gene is created automatically, and saved in a file called `AI_gene.fasta`. A message is returned to announce that the file is saved successfully.
+We created a function called simulate_gene, which take the lizards sequences as the input and simulate an AI gene base on the original sequences. When calling the function, AI simulated gene is created automatically, and saved in a file called `AI_gene.fasta`. A message is returned to announce that the file is saved successfully.
 
 ```{r}
 #1.1
@@ -90,7 +90,7 @@ simulate_gene(lizards_sequences)
 
 ```
 
-Each sequence of the AI gene has the same base composition with the original gene. For example, here is the base composition of the first sequence:
+Each sequence of the AI simulated gene has the same base composition with the original gene. For example, here is the base composition of the first sequence:
 
 ```{r}
 
@@ -139,8 +139,8 @@ rates
 
 ```
 
-Finally, we create the second AI gene base on the phangorn::simSeq() function. We choose the length of all sequences equals 1000, Which more or less like the original sequence.   
-The second AI gene is saved as a fasta file with the name AI_gene2.fasta
+Finally, we create the second AI simulated gene base on the phangorn::simSeq() function. We choose the length of all sequences equals 1000, Which more or less like the original sequence.   
+The second AI simulated gene is saved as a fasta file with the name AI_gene2.fasta
 
 ```{r}
 #create the ai_gene 2
@@ -230,7 +230,7 @@ heatmap(dist_a1.2)
 
 ```
  
-As we can see that the values in heatmap of AI sequences are quite low. It means that the AI gene has low (or no) connections with each other (because it randomly created) while the original gene is highly connected.
+As we can see that the values in heatmap of AI simulated sequences are quite low. It means that the AI simulated gene has low (or no) connections with each other (because it randomly created) while the original gene is highly connected.
 
 ##Question 3: Phylogeny reconstruction
 
