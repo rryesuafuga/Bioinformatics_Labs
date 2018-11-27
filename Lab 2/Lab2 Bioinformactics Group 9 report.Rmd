@@ -5,8 +5,9 @@ date: "2018 M11 27"
 output: pdf_document
 ---
 
-##Question 1: DNA sequence acquisition and simulation
-###1.1 Simulate an artificial DNA sequence dataset
+## Question 1: DNA sequence acquisition and simulation
+
+### 1.1 Simulate an artificial DNA sequence dataset
 
 ```{r setup, echo=FALSE, warning=FALSE, message=FALSE,include=FALSE}
 library(ape)
@@ -101,7 +102,7 @@ print(count(ai_gene_1.1[[1]],1)/length(ai_gene_1.1[[1]]))
 ```
 The composition is quite similar. There is a small different because the ai_gene only have "a" "g" "c" or "t". While the original gene rearly has "y", "m", "r"...
 
-##1.2 Artificial DNA sequence dataset using phangorn::simSeq() function.
+## 1.2 Artificial DNA sequence dataset using phangorn::simSeq() function.
 Here is the phylogenetic tree with 33 tips:
 ```{r}
 #1.2
@@ -152,8 +153,10 @@ for (i in 1:length(ai_gene_1.2)){
 ape::write.dna(ai_gene_1.2, file ="AI_gene2.fasta", format = "fasta", colsep ="")
 ```
 
+*************
 
 ## Question2: Sequence analysis
+
 ### 2.1: Report some basic statistics
 Here is some basic statistics as the requirements for the frist sequence of each gene:
 ```{r}
@@ -190,10 +193,10 @@ We also observed the stop codons both in the original and the simulated sequence
 \
 \
 
-We sobserved **1269 stop codons** in the original sequence, ... 
+We observed **1269 stop codons** in the original sequence. And set.seed(123), we observed **1332 stop codons** in the first AI simulated sequence and very surprisingly only **491** stop codons in the second AI simulated sequence. This shows clearly that our randomisation worked!!! Likewise, the amino acid composition changed with each simulation due to the randomisation.
 
 
-###2.2: Markov chain
+### 2.2: Markov chain
 We decided to use the `markovchain` library to fit the markovchanin model. Here is the resutl:
 
 ```{r}
@@ -214,7 +217,7 @@ fitHigherOrder(ai_gene_1.2[[1]])
 
 ```
 
-###2.3: Align the sequences
+### 2.3: Align the sequences
 
 We use the `msa` library to align the sequences, then calculate the distantce and draw some heatmaps as below:
 
@@ -243,7 +246,9 @@ heatmap(dist_a1.2)
  
 As we can see that the values in heatmap of AI simulated sequences are quite low. It means that the AI simulated gene has low (or no) connections with each other (because it randomly created) while the original gene is highly connected.
 
-##Question 3: Phylogeny reconstruction
+***************
+
+## Question 3: Phylogeny reconstruction
 
 ```{r warning=FALSE, message=FALSE}
 
