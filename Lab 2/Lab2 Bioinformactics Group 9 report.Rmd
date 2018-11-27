@@ -232,18 +232,53 @@ heatmap(dist_a1.2)
 As we can see that the values in heatmap of AI simulated sequences are quite low. It means that the AI simulated gene has low (or no) connections with each other (because it randomly created) while the original gene is highly connected.
 
 ##Question 3: Phylogeny reconstruction
-```{r include=TRUE, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 
-#3.1
-treeUPGMA <- upgma(dist_real)
-treeNJ <- upgma(dist_real)
-layout(matrix(c(1,2), 2, 1), height=c(1,2))
-par(mar = c(0,0,2,0)+ 0.1)
-plot(treeUPGMA, main="UPGMA")
-plot(treeNJ, "unrooted", main="NJ")
+```{r warning=FALSE, message=FALSE}
 
-#haven't done the last question
+## with help from Roshni
+
+dna <- as.DNAbin(real_alignseq)
+D <- dist.dna(dna, model="TN93")
+F = function(x) njs(x)
+D[is.nan(D)] <- 10
+tree1<-F(D)
+v1 <- boot.phylo(phy =  tree1, x = dna,
+                FUN = F, quiet = T,
+                1000)
+plot(tree1)
+v1
+dna <- as.DNAbin(ai1.1_alignseq)
+D <- dist.dna(dna, model="TN93")
+D[is.nan(D)] <- 10
+tree2<-F(D)
+v2 <- boot.phylo(phy =  tree2, x = dna,
+                FUN = F, quiet = T,
+                1000)
+plot(tree2)
+v2
+dna <- as.DNAbin(ai1.2_alignseq)
+D <- dist.dna(dna, model="TN93")
+D[is.nan(D)] <- 10
+tree3<-F(D)
+v3 <- boot.phylo(phy =  tree3, x = dna,
+                FUN = F, quiet = T,
+                1000)
+plot(tree3)
+v3
 
 
+```
+
+At the pictures we can see 3 quite different trees. First one, created by lizard sequences is showing quite deep branches with maximum depth of 7. This shows that the lizards are really connected to each other because of evolution. This tree has also the best result in bootstraping therefore we can say that in some way this tree is the most stable. It is easy to see in the second tree that the sequences are random as there is almost no connection between the sequences(Just joining two letters together makes 4*4=16 possibilities and with just 33 sequences it is difficult to find similarities). Bootstraping shows that the tree changes quite much with small changes in sequences.
+The last tree is created by a sequences that were created according to the tree and therefore we can see that this tree has quite similar depth in each branch. The bootstraping showed that with minor changes in the sequences the tree can still look sometimes quite similiar.
+Comparing these trees with the one simulated in 1.2 we can see that the one in 1.2 is much deeper in most of the branches.
+
+```{r}
+treedist(tree1, tree2, check.labels = TRUE)
+treedist(tree1, tree3, check.labels = TRUE)
+treedist(tree2, tree3, check.labels = TRUE)
+```
+
+We can see different distance measures used between the trees. It is interesting to see that the minimum and maximum combinations are different for each measure.
 ```
 
