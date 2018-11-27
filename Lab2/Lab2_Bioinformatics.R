@@ -13,12 +13,9 @@ library(msa)
 
 
 clean <- function(template_gene){
-  nucleotide <- c("a", "t", "g", "c")
   for (i in 1:length(template_gene)) {
     #Remove the " " that created when reading a file
     template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
-    #Remove the character that not nucleotide (eg: name of species...)
-    template_gene[[i]] <- template_gene[[i]][match(template_gene[[i]], nucleotide)]
   }
   return(template_gene)
 }
@@ -148,10 +145,32 @@ heatmap(dist_artificial)
 
 ## 3.1
 
-treeUPGMA <- upgma(dist_real)
-treeNJ <- upgma(dist_real)
-layout(matrix(c(1,2), 2, 1), height=c(1,2))
-par(mar = c(0,0,2,0)+ 0.1)
-plot(treeUPGMA, main="UPGMA")
-plot(treeNJ, "unrooted", main="NJ")
-ape::boot.phylo(treeUPGMA)
+# dna <- as.DNAbin(real_alignseq)
+# D <- dist.dna(dna, model="TN93")
+# F = function(x) njs(x)
+# D[is.nan(D)] <- 10
+# tree1<-F(D)
+# v1 <- boot.phylo(phy =  tree1, x = dna,
+#                  FUN = F, quiet = T,
+#                  1000)
+# plot(tree1)
+# v1
+# dna <- as.DNAbin(ai1.1_alignseq)
+# D <- dist.dna(dna, model="TN93")
+# D[is.nan(D)] <- 10
+# tree2<-F(D)
+# v2 <- boot.phylo(phy =  tree2, x = dna,
+#                  FUN = F, quiet = T,
+#                  1000)
+# plot(tree2)
+# v2
+# dna <- as.DNAbin(ai1.2_alignseq)
+# D <- dist.dna(dna, model="TN93")
+# D[is.nan(D)] <- 10
+# tree3<-F(D)
+# v3 <- boot.phylo(phy =  tree3, x = dna,
+#                  FUN = F, quiet = T,
+#                  1000)
+# plot(tree3)
+# v3
+# 
