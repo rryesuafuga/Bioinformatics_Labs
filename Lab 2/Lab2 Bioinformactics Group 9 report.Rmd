@@ -184,6 +184,18 @@ for (i in 1:1) {
 
 We can see that the composition for two nucleotide of AI simulated genes are not similar with the original sequence. It's understandable.
 
+Even additionally here below:
+```{r include=TRUE, echo=TRUE, message=FALSE, warning=FALSE, eval=TRUE}
+
+ape::base.freq(as.DNAbin(lizards_sequences), freq = FALSE, all = FALSE)
+GC.content(as.DNAbin(lizards_sequences))
+
+ape::base.freq(as.DNAbin(ai_gene_1.1), freq = FALSE, all = FALSE)
+GC.content(as.DNAbin(ai_gene_1.1))
+
+```
+
+
 We also observed the stop codons both in the original and the simulated sequences. When using the **EMBOSS Transeq** online tool, the stop codons were marked by stars. Below in a snap shot of part of the original sequence for the **FJ356743 lizard**.
 
 \
