@@ -5,6 +5,8 @@ date: "2018 M11 27"
 output: pdf_document
 ---
 
+##
+
 ```{r include=TRUE, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 
 library(ape)
@@ -146,14 +148,20 @@ fitHigherOrder(lizards_sequences[[1]])
 #2.3
 library(msa)
 #Remember that the fasta file in here should not have any space (colsep ="" when write)
+#realSequenceFile <- system.file("examples", "lizard_seqs.fasta", package="msa")
+#real_align <- readAAStringSet(realSequenceFile)
 
-
+real_align <- msaClustalW("lizard_seqs.fasta",type="dna") 
 real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
 dist_real <- as.matrix(dist.alignment(real_alignseq, "identity"))
+heatmap(dist_real)
+library(ggplot2)
 
-plot_ly(x=colnames(dist_real), y=rownames(dist_real), 
-        z=dist_real, type="heatmap", colors =colorRamp(c("yellow", "red")))%>% 
-  layout(title = "Heatmap of the Lizard sequences")
+
+#library(plotly)
+#plot_ly(x=colnames(dist_real), y=rownames(dist_real), 
+#        z=dist_real, type="heatmap", colors =colorRamp(c("yellow", "red")))%>% 
+#  layout(title = "Heatmap of the Lizard sequences")
 
 #Do the same thing with 2 other sequences. 
 #You can see that the value in heatmap of AI sequences is quite low
