@@ -182,7 +182,7 @@ for (i in 1:1) {
 
 ```
 
-We can see that the composition for two nucleotide of AI simulated genes are not similar with the original sequence. It's understandable.
+We can see that the composition for two nucleotide of AI simulated genes are not similar with the original sequence. It's understandable because we just create AI sequence base on the composition of each nucleotide.
 
 Even additionally here below:
 ```{r include=TRUE, echo=TRUE, message=FALSE, warning=FALSE, eval=TRUE}
@@ -193,8 +193,11 @@ GC.content(as.DNAbin(lizards_sequences))
 ape::base.freq(as.DNAbin(ai_gene_1.1), freq = FALSE, all = FALSE)
 GC.content(as.DNAbin(ai_gene_1.1))
 
+print(count(ai_gene_1.2[[1]],1)/length(ai_gene_1.1[[1]]))
+
 ```
 
+We can see that the composition for the sencod AI gene is not similiar with the first ones and the original sequence. Because the second ones is created base on the Q matrix.   
 
 We also observed the stop codons both in the original and the simulated sequences. When using the **EMBOSS Transeq** online tool, the stop codons were marked by stars. Below in a snap shot of part of the original sequence for the **FJ356743 lizard**.
 
@@ -205,7 +208,7 @@ We also observed the stop codons both in the original and the simulated sequence
 \
 \
 
-We observed **1269 stop codons** in the original sequence. And set.seed(123), we observed **1332 stop codons** in the first AI simulated sequence and very surprisingly only **491** stop codons in the second AI simulated sequence. This shows clearly that our randomisation worked!!! Likewise, the amino acid composition changed with each simulation due to the randomisation.
+We observed **1269 stop codons** in the original sequence. And set.seed(123), we observed **1332 stop codons** in the first AI simulated sequence and very surprisingly only **491** stop codons in the second AI simulated sequence. Likewise, the amino acid composition changed with each simulation due to the randomisation.
 
 
 ### 2.2: Markov chain
@@ -298,8 +301,8 @@ v3
 
 ```
 
-At the pictures we can see 3 quite different trees. First one, created by lizard sequences is showing quite deep branches with maximum depth of 7. This shows that the lizards are really connected to each other from the point of view of the evolutionary model. This tree has also the best result in bootstraping therefore we can say that in some way this tree is the most stable. It is easy to see in the second tree that the sequences are random as there is almost no connection between the sequences(Just joining two letters together makes 4*4=16 possibilities and with just 33 sequences it is difficult to find similarities). Bootstraping shows that the tree changes quite much with small changes in sequences.
-The last tree is created by a sequences that were created according to the tree and therefore we can see that this tree has quite similar depth in each branch. The bootstraping showed that with minor changes in the sequences the tree can still look sometimes quite similiar.
+At the pictures we can see 3 quite different trees. First one, created by lizard sequences is showing quite deep branches with maximum depth of 7. This shows that the lizards are really connected to each other from the point of view of the evolutionary model. This tree has also the best result in bootstraping therefore we can say that in some way this tree is the most stable. It is easy to see in the second tree that the sequences are random as there is almost no connection between the sequences(Just joining two letters together makes 4*4=16 possibilities and with just 33 sequences it is difficult to find similarities). Bootstraping shows that the tree changes quite much with small changes in sequences.  
+The last tree is created by a sequences that were created according to the tree and therefore we can see that this tree has quite similar depth in each branch. The bootstraping showed that with minor changes in the sequences the tree can still look sometimes quite similiar.  
 Comparing these trees with the one simulated in 1.2 we can see that the one in 1.2 is much deeper in most of the branches.
 
 ```{r}
