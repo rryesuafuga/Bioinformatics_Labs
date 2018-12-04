@@ -10,58 +10,15 @@ output: pdf_document
 
 ## Task 1.1
 
-diploid population = Aa,Aa = 2N (parents)
+With the help of wikipedia, we can compute easily the probabilities p_1 and q_1 in the first generation.
+p_1 = frequency(AA) + frequency(Aa)/2 = p^2 + pq = p(p+q) = p*1 = p
+q_1 = frequency(aa) + frequency(Aa)/2 = q^2 + pq = q(p+q) = q
 
-After random mating for first generation: children = AA, Aa, aA, aa
+Now let's have in the nth generation frequency(A) = p and frequency(a) = q. Then we can compute the frequencies for (n+1)st generation:
 
-
-Total new first gneration population = 4
-
-Number of AA homozygtes = 1
-
-Number of aa homozygotes = 1
-
-Number of Aa or aA hereterozygotes = 2
-
-Proportion of AA homozygtes = 1/4 = 0.25
-
-Proportion of aa homozygotes = 1/4 = 0.25
-
-Proportion of Aa or aA hereterozygotes = 2/4 = 0.5
+[f_(n+1)(AA), f_(n+1)(Aa), f_(n+1)(aa)] = f(AA)^2 + 2f(AA)f(Aa)[1/2, 1/2, 0] + 2f(AA)f(aa)[0,1,0] + f(Aa)^2[1/4, 1/2, 1/4] + 2f(Aa)f(aa)[0, 1/2, 1/2] + f(aa)^2[0, 0, 1] = [(f(AA) + f(Aa)/2)^2, (2f(AA) + f(Aa))(f(aa) + f(Aa)/2), f(aa) + f(Aa)^2/2 = [p^2 , 2pq , q^2]  
 
 
-
-The proportion AA Homozygotes : Aa Heterozygotes : aa homozygotes is 
-
-0.25: 0.5 : 0.25
-
-
-
-Again after random mating for first generation:
-
-
-Probability of getting A allele = 3/6 = 0.5 = p
-
-
-Probability of getting a allele = 3/6 = 0.5 = q
-
-The proportion AA Homozygotes : Aa Heterozygotes : aa homozygotes is also
-
-square of p : 2 times p times q : square of q
-
-(0.5)^2 : 2 times 0.5 times 0.5 : (0.5)^2
-
-0.25: 0.5 : 0.25
-
-
-
-This satisfies the Hardy Weinberg equilibrium.
-
-
-
-### Task 1.1.b
-
-The probabibility of getting A allele and a allele will remain the same with continued random mating therefore the Hardy Weinberg equilibrium will always hold.
 
 
 
