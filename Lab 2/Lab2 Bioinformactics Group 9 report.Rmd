@@ -5,18 +5,22 @@ date: "2018 M11 27"
 output: pdf_document
 ---
 
-##
+## Question 1: DNA sequence acquisition and simulation
 
-```{r include=TRUE, eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+### 1.1 Simulate an artificial DNA sequence dataset
 
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE,include=FALSE}
 library(ape)
 library(seqinr)
 library(phangorn)
 library(markovchain)
 library(msa)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, include=TRUE)
+```
 
-#0
-library(ape)
+Firstly, the code block below will get the lizards DNA from GenBank, and save it as a fasta file. (code provided by the teacher)
+
+```{r}
 ## Gene bank accession numbers taken from http://www.jcsantosresearch.org/Class_2014_Spring_Comparative/pdf/week_2/Jan_13_15_2015_GenBank_part_2.pdf
 lizards_accession_numbers <- c("JF806202", "HM161150", "FJ356743", "JF806205", 
                                "JQ073190", "GU457971", "FJ356741", "JF806207",
@@ -28,17 +32,20 @@ lizards_accession_numbers <- c("JF806202", "HM161150", "FJ356743", "JF806205",
                                "FJ356744", "HQ876440", "JN112651", "JF806215",
                                "JF806209") 
 lizards_sequences<-ape::read.GenBank(lizards_accession_numbers)
-print(lizards_sequences)
 ape::write.dna(lizards_sequences, file ="lizard_seqs.fasta", format = "fasta", append =FALSE, nbcol = 6, colsep = "", colw = 10)
+print(lizards_sequences)
 
+```
+
+We created a function called simulate_gene, which take the lizards sequences as the input and simulate an AI gene base on the original sequences. When calling the function, AI simulated gene is created automatically, and saved in a file called `AI_gene.fasta`. A message is returned to announce that the file is saved successfully.
+
+```{r}
 #1.1
+set.seed(123)
 clean <- function(template_gene){
-  nucleotide <- c("a", "t", "g", "c")
   for (i in 1:length(template_gene)) {
     #Remove the " " that created when reading a file
     template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
-    #Remove the character that not nucleotide (eg: name of species...)
-    template_gene[[i]] <- template_gene[[i]][match(template_gene[[i]], nucleotide)]
   }
   return(template_gene)
 }
@@ -52,7 +59,7 @@ simulate_gene <- function(template_gene)
 {
   ai_gene <- list()
   gene_num <- length(template_gene)
-  nucleotide <- c("a", "t", "g", "c")
+  nucleotide <- c("a", "c", "g", "t")
   
   #Scan all gene and get some information
   for (i in 1:gene_num) {
@@ -61,9 +68,10 @@ simulate_gene <- function(template_gene)
     #get leng and base compotision of gene
     this_leng <- length(template_sequence)
     this_compotision = seqinr::count(template_sequence,1)/this_leng
+    #print(this_compotision)
     
     #generate a new sequence base on sample function
-    this_sequence <- sample(nucleotide, size=this_leng ,prob = this_compotision, replace = TRUE)
+    this_sequence <- sample(nucleotide, size=this_leng ,prob = as.vector(this_compotision), replace = TRUE)
     #print(this_sequence)
     
     #add to list
@@ -71,19 +79,40 @@ simulate_gene <- function(template_gene)
   }
   
   #write to a file
-  ape::write.dna(ai_gene, file ="AI_gene.fasta", format = "fasta", colsep =" ")
+  ape::write.dna(ai_gene, file ="AI_gene.fasta", format = "fasta", colsep ="")
   return("Created an AI gene and saved in file: AI_gene.fasta")
 }
 
-
 simulate_gene(lizards_sequences)
+
+```
+
+Each sequence of the AI simulated gene has the same base composition with the original gene. For example, here is the base composition of the first sequence:
+
+```{r}
 ai_gene_1.1 <- read.fasta("AI_gene.fasta")
 ai_gene_1.1 <- clean(ai_gene_1.1)
 
+print("Base composition of the first sequence of the original gene: ")
+print(count(lizards_sequences[[1]],1)/length(lizards_sequences[[1]]))
 
+print("Base composition of the first sequence of the AI gene: ")
+print(count(ai_gene_1.1[[1]],1)/length(ai_gene_1.1[[1]]))
+
+```
+The composition is quite similar. There is a small different because the ai_gene only have "a" "g" "c" or "t". While the original gene rearly has "y", "m", "r"...
+
+## 1.2 Artificial DNA sequence dataset using phangorn::simSeq() function.
+Here is the phylogenetic tree with 33 tips:
+```{r}
 #1.2
 tree <- rtree(length(lizards_sequences))
 plot(tree)
+```
+
+Then, we create a transition Q matrix base on random number around 0.25. Which quite similar with the true number of the real data. Here is our matrix rates
+
+```{r}
 
 #the rates matrix
 rates <- matrix(0, ncol = 4, nrow = 4)
@@ -103,6 +132,13 @@ for (i in 1:4) {
 
 #print the rates
 rates
+
+```
+
+Finally, we create the second AI simulated gene base on the phangorn::simSeq() function. We choose the length of all sequences equals 1000, Which more or less like the original sequence.   
+The second AI simulated gene is saved as a fasta file with the name AI_gene2.fasta
+
+```{r}
 #create the ai_gene 2
 ai_gene_1.2 <- phangorn::simSeq(tree, l = 1000, Q=rates , type = "DNA")
 
@@ -115,11 +151,21 @@ for (i in 1:length(ai_gene_1.2)){
 }
 
 ape::write.dna(ai_gene_1.2, file ="AI_gene2.fasta", format = "fasta", colsep ="")
+```
 
+*************
+
+## Question2: Sequence analysis
+
+### 2.1: Report some basic statistics
+Here is some basic statistics as the requirements for the frist sequence of each gene:
+```{r}
 #2.1
 ai_gene_1.2 <- read.fasta("AI_gene2.fasta")
+ai_gene_1.2 <- clean(ai_gene_1.2)
 
-for (i in 1:length(lizards_sequences)) {
+#for (i in 1:length(lizards_sequences)) {
+for (i in 1:1) {
   cat(paste("For the sequences number: ", i , "\n"))
   print("The composition of lizards dataset:")
   print(round(count(lizards_sequences[[i]],2)/length(lizards_sequences[[i]]), 4))
@@ -134,50 +180,137 @@ for (i in 1:length(lizards_sequences)) {
 }
 
 
-#2.2
+```
+
+We can see that the composition for two nucleotide of AI simulated genes are not similar with the original sequence. It's understandable because we just create AI sequence base on the composition of each nucleotide.
+
+Even additionally here below:
+```{r include=TRUE, echo=TRUE, message=FALSE, warning=FALSE, eval=TRUE}
+
+ape::base.freq(as.DNAbin(lizards_sequences), freq = FALSE, all = FALSE)
+GC.content(as.DNAbin(lizards_sequences))
+
+ape::base.freq(as.DNAbin(ai_gene_1.1), freq = FALSE, all = FALSE)
+GC.content(as.DNAbin(ai_gene_1.1))
+
+print(count(ai_gene_1.2[[1]],1)/length(ai_gene_1.1[[1]]))
+
+```
+
+We can see that the composition for the sencod AI gene is not similiar with the first ones and the original sequence. Because the second ones is created base on the Q matrix.   
+
+We also observed the stop codons both in the original and the simulated sequences. When using the **EMBOSS Transeq** online tool, the stop codons were marked by stars. Below in a snap shot of part of the original sequence for the **FJ356743 lizard**.
+
+\
+\
+
+![**using EMBOSS Transeq tool**](FJ356743 lizard.png)
+\
+\
+
+We observed **1269 stop codons** in the original sequence. And set.seed(123), we observed **1332 stop codons** in the first AI simulated sequence and very surprisingly only **491** stop codons in the second AI simulated sequence. Likewise, the amino acid composition changed with each simulation due to the randomisation.
+
+
+### 2.2: Markov chain
+We decided to use the `markovchain` library to fit the markovchanin model. Here is the resutl:
+
+```{r}
 library(markovchain)
 markovchainFit(lizards_sequences)
 markovchainFit(ai_gene_1.1)
 markovchainFit(ai_gene_1.2)
+```
 
+Markov chain order: We use the ``fitHigherOrder`` funcion. Based on the below result (for the first sequences), we concluded that all genes have a high order. Maybe because we only have 4 nucleotide.
+
+```{r}
+#2.2
 #The fitHigherOrder function work only with a list, not list of list
-#So, my idea is take some random sequences, see the order and then make the conclusion 
 fitHigherOrder(lizards_sequences[[1]])
+fitHigherOrder(ai_gene_1.1[[1]])
+fitHigherOrder(ai_gene_1.2[[1]])
 
+```
 
+### 2.3: Align the sequences
+
+We use the `msa` library to align the sequences, then calculate the distantce and draw some heatmaps as below:
+
+```{r}
 #2.3
 library(msa)
-#Remember that the fasta file in here should not have any space (colsep ="" when write)
-#realSequenceFile <- system.file("examples", "lizard_seqs.fasta", package="msa")
-#real_align <- readAAStringSet(realSequenceFile)
-
+#Original
 real_align <- msaClustalW("lizard_seqs.fasta",type="dna") 
 real_alignseq<- msaConvert(real_align, type="seqinr::alignment") 
 dist_real <- as.matrix(dist.alignment(real_alignseq, "identity"))
+
+#Ai 1
+ai1.1_align <- msaClustalW("AI_gene.fasta",type="dna") 
+ai1.1_alignseq <- msaConvert(ai1.1_align, type="seqinr::alignment") 
+dist_a1.1 <- as.matrix(dist.alignment(ai1.1_alignseq, "identity"))
+
+#AI 2
+ai1.2_align <- msaClustalW("AI_gene2.fasta",type="dna") 
+ai1.2_alignseq<- msaConvert(ai1.2_align, type="seqinr::alignment") 
+dist_a1.2 <- as.matrix(dist.alignment(ai1.2_alignseq, "identity"))
+
 heatmap(dist_real)
-library(ggplot2)
+heatmap(dist_a1.1)
+heatmap(dist_a1.2)
+```
+ 
+As we can see that the values in heatmap of AI simulated sequences are quite low. It means that the AI simulated gene has low (or no) connections with each other (because it randomly created) while the original gene is highly connected.
+
+***************
+
+## Question 3: Phylogeny reconstruction
+
+```{r warning=FALSE, message=FALSE}
+
+## with help from Roshni
+
+dna <- as.DNAbin(real_alignseq)
+D <- dist.dna(dna, model="TN93")
+F = function(x) njs(x)
+D[is.nan(D)] <- 10
+tree1<-F(D)
+v1 <- boot.phylo(phy =  tree1, x = dna,
+                FUN = F, quiet = T,
+                1000)
+plot(tree1)
+v1
+dna <- as.DNAbin(ai1.1_alignseq)
+D <- dist.dna(dna, model="TN93")
+D[is.nan(D)] <- 10
+tree2<-F(D)
+v2 <- boot.phylo(phy =  tree2, x = dna,
+                FUN = F, quiet = T,
+                1000)
+plot(tree2)
+v2
+dna <- as.DNAbin(ai1.2_alignseq)
+D <- dist.dna(dna, model="TN93")
+D[is.nan(D)] <- 10
+tree3<-F(D)
+v3 <- boot.phylo(phy =  tree3, x = dna,
+                FUN = F, quiet = T,
+                1000)
+plot(tree3)
+v3
 
 
-#library(plotly)
-#plot_ly(x=colnames(dist_real), y=rownames(dist_real), 
-#        z=dist_real, type="heatmap", colors =colorRamp(c("yellow", "red")))%>% 
-#  layout(title = "Heatmap of the Lizard sequences")
+```
 
-#Do the same thing with 2 other sequences. 
-#You can see that the value in heatmap of AI sequences is quite low
-# It means that the Ai gene has no connections (because it randomly created) while the original gene is highly connected
+At the pictures we can see 3 quite different trees. First one, created by lizard sequences is showing quite deep branches with maximum depth of 7. This shows that the lizards are really connected to each other from the point of view of the evolutionary model. This tree has also the best result in bootstraping therefore we can say that in some way this tree is the most stable. It is easy to see in the second tree that the sequences are random as there is almost no connection between the sequences(Just joining two letters together makes 4*4=16 possibilities and with just 33 sequences it is difficult to find similarities). Bootstraping shows that the tree changes quite much with small changes in sequences.  
+The last tree is created by a sequences that were created according to the tree and therefore we can see that this tree has quite similar depth in each branch. The bootstraping showed that with minor changes in the sequences the tree can still look sometimes quite similiar.  
+Comparing these trees with the one simulated in 1.2 we can see that the one in 1.2 is much deeper in most of the branches.
 
+```{r}
+treedist(tree1, tree2, check.labels = TRUE)
+treedist(tree1, tree3, check.labels = TRUE)
+treedist(tree2, tree3, check.labels = TRUE)
+```
 
-#3.1
-treeUPGMA <- upgma(dist_real)
-treeNJ <- upgma(dist_real)
-layout(matrix(c(1,2), 2, 1), height=c(1,2))
-par(mar = c(0,0,2,0)+ 0.1)
-plot(treeUPGMA, main="UPGMA")
-plot(treeNJ, "unrooted", main="NJ")
-
-#haven't done the last question
-
-
+We can see different distance measures used between the trees. It is interesting to see that the minimum and maximum combinations are different for each measure.
 ```
 

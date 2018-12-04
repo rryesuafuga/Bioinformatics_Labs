@@ -112,7 +112,7 @@ Attached "after_backtranseq.FASTA"
 
 ## Task 2.4
 
-The coding strand sequence obtained from using "backtranseq" exactly matches the nucleotide sequence provided. For instance, the last letter **"D"** representing **Aspartic acid** exactly macthes the last three letter sequence **"GAT"**
+The coding strand sequence obtained from using "backtranseq" exactly matches the **reversed complemented** nucleotide sequence provided. For instance, the last letter **"D"** representing **Aspartic acid** exactly macthes the last three letter sequence **"GAT"**
 
 After reversing and complementing, the nucleotide sequence is in the 3' to 5' prime direction but amino acid contents are exactly the same. For example, the third amino acid in the reversed and complemented nucleotide sequence is **"AAC"** which is the same as the **"GTT"** in the sequence produced by "backtranseq", which is also the same as **"V"**. 
 
