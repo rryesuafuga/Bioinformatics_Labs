@@ -39,9 +39,9 @@ plot(tree)
 
 
 
-## 2.2
+## 2.2.1
 
-### 2.2a Both traits evolve as independent Brownian motions
+
 is.binary.tree(tree)
 tree2 <- multi2di(tree)
 size2 <- pic(carni70_2$size, tree2)
@@ -50,33 +50,32 @@ z <- lm(size2 ~ range2 - 1)    # the "-1" forces line through origin
 summary(z)
 correlationz <- sqrt(summary(z)$r.squared)
 ## no correlation
-
 bm.tree = fastBM(tree, a=0, sig2=1.0, internal = TRUE)
 phenogram(tree, bm.tree, spread.labels = TRUE)
-
 vcv.phylo(tree, cor=TRUE)
 
+
+### 2.2.1 Both traits evolve as independent Brownian motions
 library(mvMORPH)
-# Simulate a trait evolving by brownian motion on the tree
-#trait<-rTraitCont(tree)
 # Fitting the models
-#sizebm <- mvBM(tree, carni70_2$size, model="BM1", method="pic")
-#rangebm <- mvBM(tree, carni70_2$range, model="BM1", method="pic")
+bm_i <- mvBM(tree, carni70$tab, model="BM1", param = list(constraint = "diagonal"))
 
 
+### 2.2.2 The traits evolve as a correlated Brownian motion
 library(ouch)
-# treeo <- convert(tree)
-s <- ape2ouch(tree, scale = TRUE, branch.lengths = tree$edge.length)
-bm.size <- ouch::brown(carni70_1$size, s)
+tree_ouch <- ouch::ape2ouch(tree, branch.lengths = tree$edge.length)
+library(mvSLOUCH)
+bm_cor <- mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab))
 
 
-### 2.2b The traits evolve as a correlated Brownian motion
-
-
-
-### 2.2c independent Ornstein Uhlenbeck processes
-
+### 2.2.3 independent Ornstein Uhlenbeck processes
+mvOU(tree, data=carni70$tab$size, model = c("OU1"), diagnostic = FALSE, echo = TRUE)
+mvOU(tree, data=carni70$tab$range, model = c("OU1"), diagnostic = FALSE, echo = TRUE)
 
 
 
+### 2.2.4 traits evolve as a bivariate Ornstein{Uhlenbeck process
+mvOU(tree, data=carni70$tab, model = c("OU1"), diagnostic = TRUE, echo = TRUE)
 
+
+### 2.2.5
