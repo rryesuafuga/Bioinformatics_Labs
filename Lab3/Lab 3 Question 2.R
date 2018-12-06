@@ -79,3 +79,5 @@ mvOU(tree, data=carni70$tab, model = c("OU1"), diagnostic = TRUE, echo = TRUE)
 
 
 ### 2.2.5
+mvslouchModel(tree_ouch, kY=1, 
+              data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
