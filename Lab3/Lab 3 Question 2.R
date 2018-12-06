@@ -10,6 +10,7 @@ library(ade4)
 data(carni70)
 View(carni70)
 str(carni70)
+names(carni70)
 
 carni70_1 <- carni70[[1]]
 carni70_2 <- carni70[[2]]
@@ -42,10 +43,9 @@ plot(tree)
 
 ### 2.2a Both traits evolve as independent Brownian motions
 is.binary.tree(tree)
-tree<-multi2di(tree)
-size2 <- pic(carni70_2$size, tree)
-range2 <- pic(carni70_2$range, tree)
-
+tree2 <- multi2di(tree)
+size2 <- pic(carni70_2$size, tree2)
+range2 <- pic(carni70_2$range, tree2)
 z <- lm(size2 ~ range2 - 1)    # the "-1" forces line through origin
 summary(z)
 correlationz <- sqrt(summary(z)$r.squared)
@@ -55,9 +55,19 @@ bm.tree = fastBM(tree, a=0, sig2=1.0, internal = TRUE)
 phenogram(tree, bm.tree, spread.labels = TRUE)
 
 vcv.phylo(tree, cor=TRUE)
-b <- vcv.phylo(tree, cor=TRUE)
-inv.b <- solve(b)
 
+library(mvMORPH)
+# Simulate a trait evolving by brownian motion on the tree
+#trait<-rTraitCont(tree)
+# Fitting the models
+#sizebm <- mvBM(tree, carni70_2$size, model="BM1", method="pic")
+#rangebm <- mvBM(tree, carni70_2$range, model="BM1", method="pic")
+
+
+library(ouch)
+# treeo <- convert(tree)
+s <- ape2ouch(tree, scale = TRUE, branch.lengths = tree$edge.length)
+bm.size <- ouch::brown(carni70_1$size, s)
 
 
 ### 2.2b The traits evolve as a correlated Brownian motion
