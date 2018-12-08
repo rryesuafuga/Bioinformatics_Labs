@@ -1,0 +1,85 @@
+---
+title: "Lab 3 Question 2 Bioinformatics"
+author: "Duc Doung, Martin Smelik, Raymond Sseguya"
+date: "2018 M12 8"
+output: pdf_document
+---
+
+```{r, library, show=FALSE, include=FALSE}
+library(ade4)
+library(tidyverse)
+library(ape)
+library(mvMORPH)
+library(ouch)
+library(mvSLOUCH)
+
+```
+
+
+# Assignment 2
+
+## 2.1
+```{r, eval=TRUE, show=FALSE, include=FALSE, echo=FALSE}
+library(ade4)
+data(carni70)
+View(carni70)
+str(carni70)
+names(carni70)
+
+carni70_1 <- carni70[[1]]
+carni70_2 <- carni70[[2]]
+
+```
+**We analysed the carnivores dataset, data(carni70), from the ade4 R package. The data is about 70 species.**
+
+```{r}
+head(carni70$tab, 10)
+```
+
+
+```{r}
+hist(carni70_2$size, xlab="size trait", main = "Histogram of Size")
+boxplot(carni70_2$size, main="Size")
+
+```
+**The distribution of the size trait is skewed to the left. In other words, the majority of the 70 species have small sizes. Some of the species have outlier sizes.**
+
+
+```{r}
+hist(carni70_2$range, xlab="range trait", main = "Histogram of Range")
+boxplot(carni70_2$range, main="Range")
+
+```
+**The distribution of the range trait is also generally more balanced however with eveident skewness to the left. There are fewer and fewer species with longer ranges.** 
+
+
+```{r}
+ggplot()+aes(x=names(carni70_2)[1], y=scale(carni70_2$size))+
+  geom_boxplot()+
+  geom_boxplot(aes(x=names(carni70_2[2]), y=scale(carni70_2$range)))+
+  labs(y="scaled distribution", x="traits",
+       title=" Size and Range compared on the same scale")
+### Ursus_arctos has the biggest size
+```
+**After scaling the data and comparing the distributions of size and range traits on the same scale with boxplots, it is clear that the size trait is more skewed towards low values than the range trait.**
+
+
+```{r}
+rownames(carni70_2[which.max(carni70_2[,"size"]), ])
+rownames(carni70_2[which.min(carni70_2[,"size"]), ])
+rownames(carni70_2[which.max(carni70_2[,"range"]), ])
+rownames(carni70_2[which.min(carni70_2[,"range"]), ])
+
+```
+**The species "Ursus_arctos" has the biggest size while "Mustela_nivalis" the smallest size. The species "Puma_concolor" has the biggest range while the species "Bassariscus_pauli" has the smallest range**
+
+
+```{r}
+tree_phylo <- ape::read.tree(text=carni70_1)
+plot(tree_phylo)
+
+```
+**Above is a plot of the phylogenetic tree.**
+
+
+## 2.2

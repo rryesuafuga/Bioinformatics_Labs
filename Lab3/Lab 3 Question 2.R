@@ -17,65 +17,69 @@ carni70_2 <- carni70[[2]]
 
 library(tidyverse)
 
-ggplot(data = carni70_2)+
-  layer(mapping = aes(x=size, y=range), geom = "point", stat = "identity",
-        position = "identity")
+hist(carni70_2$size, xlab="size trait")
+hist(carni70_2$range, xlab="range trait")
+boxplot(carni70_2$size, main="Size")
+boxplot(carni70_2$range, main="Range")
+ggplot()+aes(x=names(carni70_2)[1], y=carni70_2$size)+
+  geom_boxplot()+
+  geom_boxplot(aes(x=names(carni70_2[2]), y=carni70_2$range))
 
-ggplot(data = carni70_2)+
-  layer(mapping = aes(x=rownames(carni70_2), y=size), geom = "bar", 
-        stat = "identity", position = "identity")+coord_flip()
-
-ggplot(data = carni70_2)+
-  layer(mapping = aes(x=rownames(carni70_2), y=range), geom = "bar", 
-        stat = "identity", position = "identity")
 
 ### generally, they have small sizes
 ### Ursus_arctos has the biggest size
-### package meant for multivariate data analysis.
+
+
+rownames(carni70_2[which.max(carni70_2[,"size"]), ])
+rownames(carni70_2[which.min(carni70_2[,"size"]), ])
+rownames(carni70_2[which.max(carni70_2[,"range"]), ])
+rownames(carni70_2[which.min(carni70_2[,"range"]), ])
+
+
 
 library(ape)
-tree <- read.tree(text=carni70_1)
-plot(tree)
+tree_phylo <- ape::read.tree(text=carni70_1)
+plot(tree_phylo)
 
 
+# is.binary.tree(tree_phylo)
+# tree2 <- multi2di(tree_phylo)
+# size2 <- pic(carni70_2$size, tree2)
+# range2 <- pic(carni70_2$range, tree2)
+# z <- lm(size2 ~ range2 - 1)    # the "-1" forces line through origin
+# summary(z)
+# correlationz <- sqrt(summary(z)$r.squared)
+# ## no correlation
+# bm.tree = fastBM(tree_phylo, a=0, sig2=1.0, internal = TRUE)
+# phenogram(tree_phylo, bm.tree, spread.labels = TRUE)
+# vcv.phylo(tree_phylo, cor=TRUE)
 
-## 2.2.1
-
-
-is.binary.tree(tree)
-tree2 <- multi2di(tree)
-size2 <- pic(carni70_2$size, tree2)
-range2 <- pic(carni70_2$range, tree2)
-z <- lm(size2 ~ range2 - 1)    # the "-1" forces line through origin
-summary(z)
-correlationz <- sqrt(summary(z)$r.squared)
-## no correlation
-bm.tree = fastBM(tree, a=0, sig2=1.0, internal = TRUE)
-phenogram(tree, bm.tree, spread.labels = TRUE)
-vcv.phylo(tree, cor=TRUE)
-
+## 2.2
 
 ### 2.2.1 Both traits evolve as independent Brownian motions
 library(mvMORPH)
-# Fitting the models
-bm_i <- mvBM(tree, carni70$tab, model="BM1", param = list(constraint = "diagonal"))
+bm_i <- mvBM(tree_phylo, carni70$tab, model="BM1", 
+             param = list(constraint = "diagonal"))
 
 
 ### 2.2.2 The traits evolve as a correlated Brownian motion
 library(ouch)
-tree_ouch <- ouch::ape2ouch(tree, branch.lengths = tree$edge.length)
+tree_ouch <- ouch::ape2ouch(tree_phylo, branch.lengths = tree_phylo$edge.length)
 library(mvSLOUCH)
 bm_cor <- mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab))
 
 
 ### 2.2.3 independent Ornstein Uhlenbeck processes
-mvOU(tree, data=carni70$tab$size, model = c("OU1"), diagnostic = FALSE, echo = TRUE)
-mvOU(tree, data=carni70$tab$range, model = c("OU1"), diagnostic = FALSE, echo = TRUE)
+mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"), 
+     diagnostic = FALSE, echo = TRUE)
+mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
+     diagnostic = FALSE, echo = TRUE)
 
 
 
-### 2.2.4 traits evolve as a bivariate Ornstein{Uhlenbeck process
-mvOU(tree, data=carni70$tab, model = c("OU1"), diagnostic = TRUE, echo = TRUE)
+### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
+mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
+     diagnostic = TRUE, echo = TRUE)
 
 
 ### 2.2.5
