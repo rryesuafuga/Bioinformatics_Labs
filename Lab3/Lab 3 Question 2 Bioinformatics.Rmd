@@ -90,17 +90,17 @@ plot(tree_phylo)
 mvMORPH::mvBM(tree_phylo, carni70$tab, model="BM1", 
              param = list(constraint = "diagonal"))
 ```
-**Because of the assumption that the two traits follow independent processes, the off diagonal elements of the estimated rate matrix are zero. From the rate matrix, we see that the changes in the size trait along the phylogenetic tree are more frequent (at 73) than the changes of the range trait on the same tree. That explains why the histogram of the size trait is more left skewed than that of the range trait. This model also suggests that the ancestor(root) had a size of 38.43947 and a range of 13.78439.**
+**Because of the assumption that the two traits follow independent processes, the off diagonal elements of the estimated rate matrix are zero. From the rate matrix, we see that the changes in the size trait along the phylogenetic tree are more frequent (at 73) than the changes of the range trait on the same tree. That explains why the histogram of the size trait is more left skewed than that of the range trait (13). This model also suggests that the ancestor(root) had a size of 38.43947 and a range of 13.78439.**
 
 
 ### 2.2.2 The traits evolve as a correlated Brownian motion
-```{r}
+```{r, echo=FALSE}
 library(ouch)
 tree_ouch <- ouch::ape2ouch(tree_phylo, branch.lengths = tree_phylo$edge.length)
 library(mvSLOUCH)
 mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab))
 ```
-
+**Under the assumption that the two traits follow correlated Brownian motion processes, the ancestor (root) had a size of 8.434762 and a range of 11.084473. Even under this model, the size trait changes more frequently than the range trait, with 29383.3025 for size versus 678.3047 for range. The difference between size and range is clearly indicated in the skewnesses of histograms.**
 
 
 

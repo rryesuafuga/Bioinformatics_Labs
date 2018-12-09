@@ -70,16 +70,16 @@ bm_cor <- mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab)
 
 
 ### 2.2.3 independent Ornstein Uhlenbeck processes
-mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"), 
-     diagnostic = FALSE, echo = TRUE)
-mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
-     diagnostic = FALSE, echo = TRUE)
+mvMORPH::mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"), 
+              diagnostic = FALSE, echo = TRUE)
+mvMORPH::mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
+              diagnostic = FALSE, echo = TRUE)
 
 
 
 ### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
-mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
-     diagnostic = TRUE, echo = TRUE)
+mvMORPH::mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
+               diagnostic = TRUE, echo = TRUE)
 
 
 ### 2.2.5
