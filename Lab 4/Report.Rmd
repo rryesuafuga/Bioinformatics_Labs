@@ -1,0 +1,219 @@
+---
+title: "Lab4 732A51 Bioinformatics Group 9"
+author: "Duc Duong, Martin Smelik, Raymond Sseguya"
+date: "8 December 2018"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(GEOquery)
+library(simpleaffy)
+library(RColorBrewer)
+library(affyPLM)
+library(limma)
+library(hgu133plus2.db)
+library(annotate)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Question 1
+
+In overall, the code provided will analysis of gene expression data from
+HUVEC1 and Ocular Vascular Endothelial2 Cells.  
+The first step is to download the data with the code GSE20986 using `getGEOsuppFiles` function. Then untar, unzip it to data folder. A data frame called ``phenodata`` is created to hold the metadata of the data. It's also written to a file with the same name.
+
+```{r, eval=TRUE}
+library(GEOquery)
+#The data folder should be empty
+
+x = getGEOSuppFiles("GSE20986")
+x
+untar("GSE20986/GSE20986_RAW.tar", exdir = "data")
+cels = list.files("data/", pattern = "[gz]")
+sapply(paste("data", cels, sep = "/"), gunzip)
+phenodata = matrix(rep(list.files("data"), 2), ncol =2)
+class(phenodata)
+
+phenodata <- as.data.frame(phenodata)
+colnames(phenodata) <- c("Name", "FileName")
+phenodata$Targets <- c("iris", 
+                       "retina", 
+                       "retina", 
+                       "iris", 
+                       "retina", 
+                       "iris", 
+                       "choroid", 
+                       "choroid", 
+                       "choroid", 
+                       "huvec", 
+                       "huvec", 
+                       "huvec")
+#Write the list of downloaded content to a file
+write.table(phenodata, "data/phenodata.txt", quote = F, sep = "\t", row.names = F)
+```
+
+The, they use the `read.affy` function to read the data and stored it in an object called `celfiles`. The `boxplot` function will display the microarray distributions. The values in boxplots are the log base 2 intensities of both pm and mm probes. 
+
+
+```{r}
+library(simpleaffy)
+#Using read.affy function to read.. 
+celfiles <- read.affy(covdesc = "phenodata.txt", path = "data")
+boxplot(celfiles)
+```
+
+
+The second boxplot is still the same. But, it is couloured and the labels are made verticaled for easier reading.
+```{r}
+library(RColorBrewer)
+cols = brewer.pal(8, "Set1")
+eset <- exprs(celfiles)
+samples <- celfiles$Targets
+colnames(eset)
+
+colnames(eset) <- samples
+boxplot(celfiles, col = cols, las = 2) #las=2 make the axis labels horizontal
+```
+
+In the next step, they use `dist` function to calculate the distance of the data from 12 samples. Then, use `hclust` function to analysis hierarchical clusters and then plot it as a cluster dendrogram.
+
+```{r}
+distance <- dist(t(eset), method = "maximum")
+clusters <- hclust(distance)
+plot(clusters)
+```
+
+The below block will convert `celfiles`  objects (AffyBatch type) into an ExpressionSet though `gcrma` function. This function will use the robust multi-array average (RMA) expression measure with help of probe sequence. When converting, the data is being normalized. Two boxplots show the data before and after normalized is drawn to compare.
+
+```{r}
+require(simpleaffy)
+require(affyPLM)
+celfiles.gcrma = gcrma(celfiles)
+
+par(mfrow=c(1,2))
+boxplot(celfiles.gcrma, col = cols, las = 2, main = "Post-Normalization") 
+boxplot(celfiles, col = cols, las = 2, main = "Pre-Normalization")
+```
+
+And then, they draw the cluster dndrogram of the normilizated data.
+
+```{r}
+dev.off()
+
+distance2 <- dist(t(exprs(celfiles.gcrma)), method = "maximum")
+clusters2 <- hclust(distance2)
+plot(clusters2)
+```
+
+In the next step, a matrix call `design` is created. It contains the name of the names of genes and which samples it belongs to.
+A contrast matrix is also created by the `makeContrasts` function. It includes three pairs of having versus the others.
+
+```{r}
+library(limma)
+phenodata
+
+samples <- as.factor(samples)
+design <- model.matrix(~0+samples)
+colnames(design)
+
+colnames(design) <- c("choroid", "huvec", "iris", "retina")
+design
+
+contrast.matrix = makeContrasts(
+  huvec_choroid = huvec - choroid, 
+  huvec_retina = huvec - retina, 
+  huvec_iris <- huvec - iris, 
+  levels = design)
+```
+
+In this step. They use the `design` matrix to fit the linear model `celfiles.gcrma` expressionSet created before by using the `LMFit` function. The result called `fit` is used in `contrasts.fit` function with the contrast matrix. They continue with extracting some t value, F value.. by the `eBayes` function. 
+
+```{r}
+fit = lmFit(celfiles.gcrma, design)
+huvec_fit <- contrasts.fit(fit, contrast.matrix)
+huvec_ebay <- eBayes(huvec_fit)
+```
+
+In the next step, the `topTable` function with number =  100000 will extract the top-ranked genes from the result before. `getSYMBOL` function is called to map that 100000 genes with the `hgu133plus2`. The final result is printed below.
+```{r}
+library(hgu133plus2.db)
+library(annotate)
+
+probenames.list <- rownames(topTable(huvec_ebay, number = 100000))
+getsymbols <- getSYMBOL(probenames.list, "hgu133plus2")
+results <- topTable(huvec_ebay, number = 100000, coef = "huvec_choroid")
+results <- cbind(results, getsymbols)
+summary(results)
+```
+
+The results are grouped into three 
+groups. Group 3 includes genes that adj.P.Val < 0.05 and logFC < -5. Group 2 contains gene that adj.P.Val < 0.05 and logFC > 5, and the rest is group 1. Number of gene in each groups is printed.
+Data in group 1 means Not Significant, group 2 means "Upregulated" and group 3 means "Downregulated". A scatter plot is draw, in which x = logFC and y = -1*log10(adj.P.Val)
+
+```{r}
+results$threshold <- "1"
+a <- subset(results, adj.P.Val < 0.05 & logFC > 5)
+results[rownames(a), "threshold"] <- "2"
+b <- subset(results, adj.P.Val < 0.05 & logFC < -5)
+results[rownames(b), "threshold"] <- "3"
+table(results$threshold)
+
+library(ggplot2)
+volcano <- ggplot(data = results, 
+                  aes(x = logFC, y = -1*log10(adj.P.Val), 
+                      colour = threshold, 
+                      label = getsymbols))
+
+volcano <- volcano + 
+  geom_point() + 
+  scale_color_manual(values = c("black", "red", "green"), 
+                     labels = c("Not Significant", "Upregulated", "Downregulated"), 
+                     name = "Key/Legend")
+
+volcano + 
+  geom_text(data = subset(results, logFC > 5 & -1*log10(adj.P.Val) > 5), aes(x = logFC, y = -1*log10(adj.P.Val), colour = threshold, label = getsymbols)  )
+
+```
+
+
+##Question2
+
+The three constrast are:
+  + huvec - choroid, 
+  + huvec - retina, 
+  + huvec - iris
+We will choose the first sample of each type to make analysis. Here is the plots of raw data.
+```{r}
+iris <- eset[,1]
+retina <- eset[,2]
+choroid <- eset[,7]
+huvec <- eset[,10]
+
+plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data") 
+plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
+plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
+```
+
+
+And here, for the normalized data:
+```{r}
+huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
+huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
+huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
+plot(huvec_iris)
+plot(huvec_retina)
+plot(huvec_choroid)
+```
+
+And here is the heat map:
+
+```{r}
+par(mfrow=c(1,2))
+heatmap(as.matrix(distance), main = "Raw data")
+heatmap(as.matrix(distance2), main = "normalized data")
+```
+
+MA plots is still missing.
