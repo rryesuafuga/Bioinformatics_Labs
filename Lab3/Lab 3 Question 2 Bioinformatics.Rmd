@@ -86,7 +86,7 @@ plot(tree_phylo)
 ## 2.2
 
 ### 2.2.1 Both traits evolve as independent Brownian motions
-```{r, echo=FALSE}
+```{r}
 mvMORPH::mvBM(tree_phylo, carni70$tab, model="BM1", 
              param = list(constraint = "diagonal"))
 ```
@@ -94,7 +94,7 @@ mvMORPH::mvBM(tree_phylo, carni70$tab, model="BM1",
 
 
 ### 2.2.2 The traits evolve as a correlated Brownian motion
-```{r, echo=FALSE}
+```{r}
 library(ouch)
 tree_ouch <- ouch::ape2ouch(tree_phylo, branch.lengths = tree_phylo$edge.length)
 library(mvSLOUCH)
@@ -106,19 +106,33 @@ mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab))
 
 ### 2.2.3 independent Ornstein Uhlenbeck processes
 ```{r}
-mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"), 
-     diagnostic = FALSE, echo = TRUE)
-mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
-     diagnostic = FALSE, echo = TRUE)
+mvMORPH::mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"), 
+              diagnostic = FALSE, echo = TRUE)
+mvMORPH::mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
+              diagnostic = FALSE, echo = TRUE)
 ```
 
+The following is one of the mathematical representations of a Ornstein-Uhlenbeck processes sourced from the Wikipedia page on [Ornstein–Uhlenbeck process](https://en.wikipedia.org/wiki/Ornstein%E2%80%93Uhlenbeck_process)
+
+\ 
+![**Ornstein-Uhlenbeck**](OU_process.png)
+
+\ 
+
+**This shows that the OU process comprises a Wiener process component (Brownian motion component.) When we modeled the changes in both the size and range traits, we obtained theta and sigma values. The theta and sigma values help us compare the two traits. The size trait has a theta value of 38.43947 which is bigger than the theta value for range of 11.08609. Given the above shown differential question, this implies that the Ornstein-Uhlenbeck change process of size trait is bigger than that of the range trait. Additionally concerning the sigma values, the size trait has a bigger sigma value of 73.70246 as compared to that of the range trait of 38.05329. The sigma value is the Wiener process drift term. That means that the change in the size trait takes longer to reach equilibrium (or stabilise) as compared to the change in the range trait.**
 
 
 ### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
 ```{r}
-mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
-     diagnostic = TRUE, echo = TRUE)
+mvMORPH::mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
+               diagnostic = TRUE, echo = TRUE)
 ```
+**This model does not give us notable new information from the earlier approaches. In fact, it might be misleading in that since we have seen from the earlier models that the processes of the two traits change very differently, we can not trust this model.**
 
 
+### 2.2.5 size evolves as a Brownian motion and range as an Ornstein Uhlenbeck
+```{r, eval=FALSE, include=TRUE, show=TRUE}
+size.bm_range.ou <- mvslouchModel(tree_ouch, kY=1, 
+              data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
+```
 
