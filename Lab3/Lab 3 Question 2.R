@@ -58,7 +58,7 @@ plot(tree_phylo)
 
 ### 2.2.1 Both traits evolve as independent Brownian motions
 library(mvMORPH)
-bm_i <- mvBM(tree_phylo, carni70$tab, model="BM1", 
+mvMORPH::mvBM(tree_phylo, carni70$tab, model="BM1", 
              param = list(constraint = "diagonal"))
 
 

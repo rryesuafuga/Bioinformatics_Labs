@@ -37,7 +37,7 @@ head(carni70$tab, 10)
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 hist(carni70_2$size, xlab="size trait", main = "Histogram of Size")
 boxplot(carni70_2$size, main="Size")
 
@@ -45,7 +45,7 @@ boxplot(carni70_2$size, main="Size")
 **The distribution of the size trait is skewed to the left. In other words, the majority of the 70 species have small sizes. Some of the species have outlier sizes.**
 
 
-```{r}
+```{r, echo=FALSE}
 hist(carni70_2$range, xlab="range trait", main = "Histogram of Range")
 boxplot(carni70_2$range, main="Range")
 
@@ -53,7 +53,7 @@ boxplot(carni70_2$range, main="Range")
 **The distribution of the range trait is also generally more balanced however with eveident skewness to the left. There are fewer and fewer species with longer ranges.** 
 
 
-```{r}
+```{r, echo=FALSE}
 ggplot()+aes(x=names(carni70_2)[1], y=scale(carni70_2$size))+
   geom_boxplot()+
   geom_boxplot(aes(x=names(carni70_2[2]), y=scale(carni70_2$range)))+
@@ -82,4 +82,43 @@ plot(tree_phylo)
 **Above is a plot of the phylogenetic tree.**
 
 
+
 ## 2.2
+
+### 2.2.1 Both traits evolve as independent Brownian motions
+```{r, echo=FALSE}
+mvMORPH::mvBM(tree_phylo, carni70$tab, model="BM1", 
+             param = list(constraint = "diagonal"))
+```
+**Because of the assumption that the two traits follow independent processes, the off diagonal elements of the estimated rate matrix are zero. From the rate matrix, we see that the changes in the size trait along the phylogenetic tree are more frequent (at 73) than the changes of the range trait on the same tree. That explains why the histogram of the size trait is more left skewed than that of the range trait. This model also suggests that the ancestor(root) had a size of 38.43947 and a range of 13.78439.**
+
+
+### 2.2.2 The traits evolve as a correlated Brownian motion
+```{r}
+library(ouch)
+tree_ouch <- ouch::ape2ouch(tree_phylo, branch.lengths = tree_phylo$edge.length)
+library(mvSLOUCH)
+mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab))
+```
+
+
+
+
+### 2.2.3 independent Ornstein Uhlenbeck processes
+```{r}
+mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"), 
+     diagnostic = FALSE, echo = TRUE)
+mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
+     diagnostic = FALSE, echo = TRUE)
+```
+
+
+
+### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
+```{r}
+mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
+     diagnostic = TRUE, echo = TRUE)
+```
+
+
+
