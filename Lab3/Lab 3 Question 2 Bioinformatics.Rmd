@@ -127,12 +127,395 @@ The following is one of the mathematical representations of a Ornstein-Uhlenbeck
 mvMORPH::mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
                diagnostic = TRUE, echo = TRUE)
 ```
-**This model does not give us notable new information from the earlier approaches. In fact, it might be misleading in that since we have seen from the earlier models that the processes of the two traits change very differently, we can not trust this model.**
+**This model does not give us notable new information from the earlier approaches. However, it is worth noting that the model gives us a very low log likelihood of -572.6063 which is very good. This means it is one of the good models to study further**
 
 
 ### 2.2.5 size evolves as a Brownian motion and range as an Ornstein Uhlenbeck
 ```{r, eval=FALSE, include=TRUE, show=TRUE}
-size.bm_range.ou <- mvslouchModel(tree_ouch, kY=1, 
-              data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
+mvslouchModel(tree_ouch, kY=1, 
+      data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
+```
+
+**The model, where the size changes as a Brownian motion and range as an Ornstein Uhlenbeck process is perhaps the best model because it has the lowest log likelihood of -641.8002. The objective is the minimise the log likelihood therefore this fifth model gives the best result in that regard.**
+
+**Below is the output from the R Console.**
+
+
+```{r}
+
+# [1] "Starting point of heuristic search procedure : "
+#          A        Syy 
+# -0.3038808 -1.1454798 
+# $`FinalFound`
+# $`FinalFound`$`HeuristicSearchPointFinalFind`
+#           A         Syy      LogLik 
+#    2.339259    3.712662 -641.801747 
+# 
+# $`FinalFound`$ParamsInModel
+# $`FinalFound`$ParamsInModel$`A`
+#          V1
+# V1 10.37354
+# 
+# $`FinalFound`$ParamsInModel$B
+#            V2
+# V1 -0.6884966
+# 
+# $`FinalFound`$ParamsInModel$mPsi
+#       reg.1
+# V1 10.17529
+# 
+# $`FinalFound`$ParamsInModel$mPsi0
+#    [,1]
+# V1    0
+# 
+# $`FinalFound`$ParamsInModel$vY0
+#        [,1]
+# V1 10.73511
+# 
+# $`FinalFound`$ParamsInModel$vX0
+#        [,1]
+# V2 8.434762
+# 
+# $`FinalFound`$ParamsInModel$Syy
+#          V1
+# V1 40.96271
+# 
+# $`FinalFound`$ParamsInModel$Syx
+#    V2
+# V1  0
+# 
+# $`FinalFound`$ParamsInModel$Sxy
+#    V1
+# V2  0
+# 
+# $`FinalFound`$ParamsInModel$Sxx
+#          V2
+# V2 171.4156
+# 
+# 
+# $`FinalFound`$ParamSummary
+# $`FinalFound`$ParamSummary$`phyl.halflife`
+# $`FinalFound`$ParamSummary$`phyl.halflife`$`directions`
+#      [,1]
+# [1,]    1
+# 
+# $`FinalFound`$ParamSummary$`phyl.halflife`$halflives
+#                    [,1]
+# eigenvalues 10.37354269
+# halflife     0.06681875
+# %treeheight  6.68187524
+# 
+# $`FinalFound`$ParamSummary$`phyl.halflife`$halflifeLowerbounds
+# [1] 0.06681875
+# 
+# 
+# $`FinalFound`$ParamSummary$expmtA
+#              V1
+# V1 3.124839e-05
+# 
+# $`FinalFound`$ParamSummary$optimal.regression
+#            V2
+# V1 0.06637044
+# 
+# $`FinalFound`$ParamSummary$mPsi.rotated
+#       reg.1
+# V1 10.17497
+# 
+# $`FinalFound`$ParamSummary$mPsi0.rotated
+#    [,1]
+# V1    0
+# 
+# $`FinalFound`$ParamSummary$cov.matrix
+#           V1        V2
+# V1  191.5953  1762.193
+# V2 1762.1927 29383.302
+# 
+# $`FinalFound`$ParamSummary$corr.matrix
+#           V1        V2
+# V1 1.0000000 0.7426952
+# V2 0.7426952 1.0000000
+# 
+# $`FinalFound`$ParamSummary$conditional.cov.matrix
+#          V1
+# V1 85.91207
+# 
+# $`FinalFound`$ParamSummary$conditional.corr.matrix
+#    V1
+# V1  1
+# 
+# $`FinalFound`$ParamSummary$stationary.cov.matrix
+#         V1
+# V1 87.1148
+# 
+# $`FinalFound`$ParamSummary$stationary.corr.matrix
+#    V1
+# V1  1
+# 
+# $`FinalFound`$ParamSummary$optima.cov.matrix
+#          V1
+# V1 129.4345
+# 
+# $`FinalFound`$ParamSummary$optima.corr.matrix
+#    V1
+# V1  1
+# 
+# $`FinalFound`$ParamSummary$cov.with.optima
+#          V1
+# V1 116.9575
+# 
+# $`FinalFound`$ParamSummary$corr.with.optima
+#           V1
+# V1 0.7426952
+# 
+# $`FinalFound`$ParamSummary$evolutionary.regression
+#            V2
+# V1 0.05997259
+# 
+# $`FinalFound`$ParamSummary$StS
+#          V1      V2
+# V1 1677.944     0.0
+# V2    0.000 29383.3
+# 
+# $`FinalFound`$ParamSummary$LogLik
+# [1] -641.8017
+# 
+# $`FinalFound`$ParamSummary$dof
+# [1] 6
+# 
+# $`FinalFound`$ParamSummary$m2loglik
+# [1] 1283.603
+# 
+# $`FinalFound`$ParamSummary$aic
+# [1] 1295.603
+# 
+# $`FinalFound`$ParamSummary$aic.c
+# [1] 1296.235
+# 
+# $`FinalFound`$ParamSummary$sic
+# [1] 1313.253
+# 
+# $`FinalFound`$ParamSummary$bic
+# [1] 1313.253
+# 
+# $`FinalFound`$ParamSummary$RSS
+# $`FinalFound`$ParamSummary$RSS$`RSS`
+#          [,1]
+# [1,] 139.8423
+# 
+# $`FinalFound`$ParamSummary$RSS$R2
+#           [,1]
+# [1,] 0.0177938
+# 
+# 
+# $`FinalFound`$ParamSummary$trait.regression
+# $`FinalFound`$ParamSummary$trait.regression[[1]]
+#            V2
+# V1 0.05997259
+# 
+# 
+# $`FinalFound`$ParamSummary$confidence.interval
+# $`FinalFound`$ParamSummary$confidence.interval$`regression.summary`
+# $`FinalFound`$ParamSummary$confidence.interval$`regression.summary`$`B.regression.confidence.interval`
+#    Lower.end Estimated.Point Upper.end
+# V1 -1.888154      -0.6884966 0.5111613
+# 
+# $`FinalFound`$ParamSummary$confidence.interval$`regression.summary`$mPsi.regression.confidence.interval
+#    Lower.end Estimated.Point Upper.end
+# V1  6.944177        10.17529  13.40641
+# 
+# 
+# 
+# 
+# $`FinalFound`$LogLik
+# [1] -641.8017
+# 
+# 
+# $MaxLikFound
+# $MaxLikFound$`HeuristicSearchPointMaxLik`
+#           A         Syy      LogLik 
+#    2.339259    3.712662 -641.800203 
+# 
+# $MaxLikFound$ParamsInModel
+# $MaxLikFound$ParamsInModel$`A`
+#          V1
+# V1 10.37354
+# 
+# $MaxLikFound$ParamsInModel$B
+#            V2
+# V1 -0.6792388
+# 
+# $MaxLikFound$ParamsInModel$mPsi
+#       reg.1
+# V1 10.15824
+# 
+# $MaxLikFound$ParamsInModel$mPsi0
+#    [,1]
+# V1    0
+# 
+# $MaxLikFound$ParamsInModel$vY0
+#        [,1]
+# V1 10.72571
+# 
+# $MaxLikFound$ParamsInModel$vX0
+#        [,1]
+# V2 8.434762
+# 
+# $MaxLikFound$ParamsInModel$Syy
+#          V1
+# V1 40.96271
+# 
+# $MaxLikFound$ParamsInModel$Syx
+#    V2
+# V1  0
+# 
+# $MaxLikFound$ParamsInModel$Sxy
+#    V1
+# V2  0
+# 
+# $MaxLikFound$ParamsInModel$Sxx
+#          V2
+# V2 171.4156
+# 
+# 
+# $MaxLikFound$ParamSummary
+# $MaxLikFound$ParamSummary$`phyl.halflife`
+# $MaxLikFound$ParamSummary$`phyl.halflife`$`directions`
+#      [,1]
+# [1,]    1
+# 
+# $MaxLikFound$ParamSummary$`phyl.halflife`$halflives
+#                    [,1]
+# eigenvalues 10.37354269
+# halflife     0.06681875
+# %treeheight  6.68187524
+# 
+# $MaxLikFound$ParamSummary$`phyl.halflife`$halflifeLowerbounds
+# [1] 0.06681875
+# 
+# 
+# $MaxLikFound$ParamSummary$expmtA
+#              V1
+# V1 3.124839e-05
+# 
+# $MaxLikFound$ParamSummary$optimal.regression
+#          V2
+# V1 0.065478
+# 
+# $MaxLikFound$ParamSummary$mPsi.rotated
+#       reg.1
+# V1 10.15793
+# 
+# $MaxLikFound$ParamSummary$mPsi0.rotated
+#    [,1]
+# V1    0
+# 
+# $MaxLikFound$ParamSummary$cov.matrix
+#           V1        V2
+# V1  188.6378  1738.498
+# V2 1738.4977 29383.302
+# 
+# $MaxLikFound$ParamSummary$corr.matrix
+#           V1        V2
+# V1 1.0000000 0.7384302
+# V2 0.7384302 1.0000000
+# 
+# $MaxLikFound$ParamSummary$conditional.cov.matrix
+#          V1
+# V1 85.77755
+# 
+# $MaxLikFound$ParamSummary$conditional.corr.matrix
+#    V1
+# V1  1
+# 
+# $MaxLikFound$ParamSummary$stationary.cov.matrix
+#          V1
+# V1 86.94816
+# 
+# $MaxLikFound$ParamSummary$stationary.corr.matrix
+#    V1
+# V1  1
+# 
+# $MaxLikFound$ParamSummary$optima.cov.matrix
+#         V1
+# V1 125.977
+# 
+# $MaxLikFound$ParamSummary$optima.corr.matrix
+#    V1
+# V1  1
+# 
+# $MaxLikFound$ParamSummary$cov.with.optima
+#          V1
+# V1 113.8334
+# 
+# $MaxLikFound$ParamSummary$corr.with.optima
+#           V1
+# V1 0.7384302
+# 
+# $MaxLikFound$ParamSummary$evolutionary.regression
+#            V2
+# V1 0.05916618
+# 
+# $MaxLikFound$ParamSummary$StS
+#          V1      V2
+# V1 1677.944     0.0
+# V2    0.000 29383.3
+# 
+# $MaxLikFound$ParamSummary$LogLik
+# [1] -641.8002
+# 
+# $MaxLikFound$ParamSummary$dof
+# [1] 6
+# 
+# $MaxLikFound$ParamSummary$m2loglik
+# [1] 1283.6
+# 
+# $MaxLikFound$ParamSummary$aic
+# [1] 1295.6
+# 
+# $MaxLikFound$ParamSummary$aic.c
+# [1] 1296.232
+# 
+# $MaxLikFound$ParamSummary$sic
+# [1] 1313.25
+# 
+# $MaxLikFound$ParamSummary$bic
+# [1] 1313.25
+# 
+# $MaxLikFound$ParamSummary$RSS
+# $MaxLikFound$ParamSummary$RSS$`RSS`
+#          [,1]
+# [1,] 139.8697
+# 
+# $MaxLikFound$ParamSummary$RSS$R2
+#            [,1]
+# [1,] 0.01778443
+# 
+# 
+# $MaxLikFound$ParamSummary$trait.regression
+# $MaxLikFound$ParamSummary$trait.regression[[1]]
+#            V2
+# V1 0.05916618
+# 
+# 
+# $MaxLikFound$ParamSummary$confidence.interval
+# $MaxLikFound$ParamSummary$confidence.interval$`regression.summary`
+# $MaxLikFound$ParamSummary$confidence.interval$`regression.summary`$`B.regression.confidence.interval`
+#    Lower.end Estimated.Point Upper.end
+# V1 -1.867116      -0.6792388 0.5086384
+# 
+# $MaxLikFound$ParamSummary$confidence.interval$`regression.summary`$mPsi.regression.confidence.interval
+#    Lower.end Estimated.Point Upper.end
+# V1  6.883083        10.15824   13.4334
+# 
+# 
+# 
+# 
+# $MaxLikFound$LogLik
+# [1] -641.8002
+# 
+# 
+
+
+
 ```
 
