@@ -124,3 +124,26 @@ volcano <- volcano +
 
 volcano + 
   geom_text(data = subset(results, logFC > 5 & -1*log10(adj.P.Val) > 5), aes(x = logFC, y = -1*log10(adj.P.Val), colour = threshold, label = getsymbols)  )
+
+
+###
+#Question 2
+iris <- eset[,1]
+retina <- eset[,2]
+choroid <- eset[,7]
+huvec <- eset[,10]
+
+plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data") 
+plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
+plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
+
+
+huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
+huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
+huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
+plot(huvec_iris)
+plot(huvec_retina)
+plot(huvec_choroid)
+
+
+

@@ -23,11 +23,11 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 In overall, the code provided will analysis of gene expression data from
 HUVEC1 and Ocular Vascular Endothelial2 Cells.  
-The first step is download the data with the code GSE20986 using `getGEOsuppFiles` function. Then untar, unzip it to data forder. A dataframe called ``phenodata`` is created to hold the metadata of the data. It's also wroted to a file with the same name.
+The first step is to download the data with the code GSE20986 using `getGEOsuppFiles` function. Then untar, unzip it to data folder. A data frame called ``phenodata`` is created to hold the metadata of the data. It's also written to a file with the same name.
 
 ```{r, eval=TRUE}
 library(GEOquery)
-#Pay attention at the working directory before running this line
+#The data folder should be empty
 
 x = getGEOSuppFiles("GSE20986")
 x
@@ -55,7 +55,7 @@ phenodata$Targets <- c("iris",
 write.table(phenodata, "data/phenodata.txt", quote = F, sep = "\t", row.names = F)
 ```
 
-The, they use the `read.affy` function to read the data and stored it in a object called `celfiles`. The `boxplot` function will display the microarray distributions. The values in boxplots is the log base 2 intensities of both pm and mm probes. 
+The, they use the `read.affy` function to read the data and stored it in an object called `celfiles`. The `boxplot` function will display the microarray distributions. The values in boxplots are the log base 2 intensities of both pm and mm probes. 
 
 
 ```{r}
@@ -66,7 +66,7 @@ boxplot(celfiles)
 ```
 
 
-The second boxplot is still the same, but it is couloured and label is make verticaled for easier to read.
+The second boxplot is still the same. But, it is couloured and the labels are made verticaled for easier reading.
 ```{r}
 library(RColorBrewer)
 cols = brewer.pal(8, "Set1")
@@ -86,7 +86,7 @@ clusters <- hclust(distance)
 plot(clusters)
 ```
 
-The below block will convert `celfiles`  objects (AffyBatch type) into an ExpressionSet though `gcrma` function. This function will use the robust multi-array average (RMA) expression measure with help of probe sequence. When converting, the data is being normalized. Two boxplots show the data before and after normalized is draw to compare.
+The below block will convert `celfiles`  objects (AffyBatch type) into an ExpressionSet though `gcrma` function. This function will use the robust multi-array average (RMA) expression measure with help of probe sequence. When converting, the data is being normalized. Two boxplots show the data before and after normalized is drawn to compare.
 
 ```{r}
 require(simpleaffy)
@@ -103,13 +103,13 @@ And then, they draw the cluster dndrogram of the normilizated data.
 ```{r}
 dev.off()
 
-distance <- dist(t(exprs(celfiles.gcrma)), method = "maximum")
-clusters <- hclust(distance)
-plot(clusters)
+distance2 <- dist(t(exprs(celfiles.gcrma)), method = "maximum")
+clusters2 <- hclust(distance2)
+plot(clusters2)
 ```
 
-In the next step, a matrix call `design` is created. It contain the name of the names of genes and which samples it belong to.
-An contrast matrix is also created by the `makeContrasts` function. It includes three pairs of huvec versus the others.
+In the next step, a matrix call `design` is created. It contains the name of the names of genes and which samples it belongs to.
+A contrast matrix is also created by the `makeContrasts` function. It includes three pairs of having versus the others.
 
 ```{r}
 library(limma)
@@ -180,3 +180,40 @@ volcano +
 
 
 ##Question2
+
+The three constrast are:
+  + huvec - choroid, 
+  + huvec - retina, 
+  + huvec - iris
+We will choose the first sample of each type to make analysis. Here is the plots of raw data.
+```{r}
+iris <- eset[,1]
+retina <- eset[,2]
+choroid <- eset[,7]
+huvec <- eset[,10]
+
+plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data") 
+plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
+plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
+```
+
+
+And here, for the normalized data:
+```{r}
+huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
+huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
+huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
+plot(huvec_iris)
+plot(huvec_retina)
+plot(huvec_choroid)
+```
+
+And here is the heat map:
+
+```{r}
+par(mfrow=c(1,2))
+heatmap(as.matrix(distance), main = "Raw data")
+heatmap(as.matrix(distance2), main = "normalized data")
+```
+
+MA plots is still missing.
