@@ -16,7 +16,9 @@ q_1 = frequency(aa) + frequency(Aa)/2 = q^2 + pq = q(p+q) = q
 
 Now let's have in the nth generation frequency(A) = p and frequency(a) = q. Then we can compute the frequencies for (n+1)st generation:
 
-[f_(n+1)(AA), f_(n+1)(Aa), f_(n+1)(aa)] = f(AA)^2 + 2f(AA)f(Aa)[1/2, 1/2, 0] + 2f(AA)f(aa)[0,1,0] + f(Aa)^2[1/4, 1/2, 1/4] + 2f(Aa)f(aa)[0, 1/2, 1/2] + f(aa)^2[0, 0, 1] = [(f(AA) + f(Aa)/2)^2, (2f(AA) + f(Aa))(f(aa) + f(Aa)/2), f(aa) + f(Aa)^2/2 = [p^2 , 2pq , q^2]  
+$[f_(n+1)(AA), f_(n+1)(Aa), f_(n+1)(aa)] = f(AA)^2 + 2f(AA)f(Aa)[1/2, 1/2, 0] + 2f(AA)f(aa)[0,1,0] + f(Aa)^2[1/4, 1/2, 1/4] + 2f(Aa)f(aa)[0, 1/2, 1/2] + f(aa)^2[0, 0, 1] = [(f(AA) + f(Aa)/2)^2, (2f(AA) + f(Aa))(f(aa) + f(Aa)/2), f(aa) + f(Aa)^2/2 = [p^2 , 2pq , q^2]$  
+
+Therefore $f(AA) = p^2$, $f(Aa) = 2pq$, $f(aa) = q^2$
 
 
 

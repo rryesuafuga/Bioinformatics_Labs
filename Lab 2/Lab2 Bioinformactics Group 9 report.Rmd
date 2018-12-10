@@ -270,28 +270,29 @@ As we can see that the values in heatmap of AI simulated sequences are quite low
 ## with help from Roshni
 
 dna <- as.DNAbin(real_alignseq)
-D <- dist.dna(dna, model="TN93")
+D1 <- dist.dna(dna, model="TN93")
 F = function(x) njs(x)
-D[is.nan(D)] <- 10
-tree1<-F(D)
+D1[is.nan(D1)] <- 10
+tree1<-F(D1)
 v1 <- boot.phylo(phy =  tree1, x = dna,
                 FUN = F, quiet = T,
                 1000)
 plot(tree1)
 v1
 dna <- as.DNAbin(ai1.1_alignseq)
-D <- dist.dna(dna, model="TN93")
-D[is.nan(D)] <- 10
-tree2<-F(D)
+#D2 <- dist.dna(dna, model="TN93")
+D2 <- dist.alignment(ai1.1_alignseq, "identity")
+D2[is.nan(D2)] <- 10
+tree2<-F(D2)
 v2 <- boot.phylo(phy =  tree2, x = dna,
                 FUN = F, quiet = T,
                 1000)
 plot(tree2)
 v2
 dna <- as.DNAbin(ai1.2_alignseq)
-D <- dist.dna(dna, model="TN93")
-D[is.nan(D)] <- 10
-tree3<-F(D)
+D3 <- dist.dna(dna, model="TN93")
+D3[is.nan(D3)] <- 10
+tree3<-F(D3)
 v3 <- boot.phylo(phy =  tree3, x = dna,
                 FUN = F, quiet = T,
                 1000)
