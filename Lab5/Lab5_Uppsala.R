@@ -1,10 +1,10 @@
 
-##-----------------------------Lab7------------------------------
+##-----------------------------Lab5------------------------------
 
 # 1
-install.packages("devtools")
-library(devtools)
-install_github("mategarb/R.ROSETTA")
+#install.packages("devtools")
+#library(devtools)
+#install_github("mategarb/R.ROSETTA")
 library(R.ROSETTA)
 
 data("autcon")
@@ -36,12 +36,14 @@ nrow(table_rule[which(table_rule$PVAL<= 0.05),])
 
 
 # 4
-saveLineByLine(table_rule, "table_rule.txt", 
-               discrete=FALSE, filterByPval=FALSE, pval=0.05)
+# saveLineByLine(table_rule, "table_rule.txt", 
+#               discrete=FALSE, filterByPval=FALSE, pval=0.05)
 
 
 # 5
 ## big red line strong connection
+## big bands
+## many connections
 ## check table of rules
 ## rules CUT_COND (decision)
 ## significant ---> accuracy, support, number of rules
