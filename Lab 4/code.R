@@ -137,16 +137,10 @@ plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data")
 plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
 plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
 
-plot(x=log(huvec) ,y=log(iris),xlab="huvec",ylab="iris", main="Scatterplot of raw data") 
-plot(x=log(huvec) ,y=log(retina),xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
-plot(x=log(huvec) ,y=log(choroid),xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
-##log
-#huvec_iris <- pairwise.comparison(celfiles,"Targets",c("huvec","iris"))
-#huvec_retina <-pairwise.comparison(celfiles,"Targets",c("huvec","retina"))
-#huvec_choroid <-pairwise.comparison(celfiles,"Targets",c("huvec","choroid"))
-#plot(huvec_iris)
-#plot(huvec_retina)
-#plot(huvec_choroid)
+## log
+plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data", log=c('x','y')) 
+plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data",log=c('x','y')) 
+plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data",log=c('x','y')) 
 
 ## MA plot
 iris_huvec <- eset[,c(1,10)]
@@ -162,29 +156,16 @@ ma.plot( rowMeans(log2(chronoid_huvec)), log2(chronoid_huvec[, 1])-log2(chronoid
 
 ###################################### normalized #######################################
 
-##?? how to normalize??
-eset_norm <- normalize.quantiles(eset)
-
-iris <- eset_norm[,1]
-retina <- eset_norm[,2]
-choroid <- eset_norm[,7]
-huvec <- eset_norm[,10]
-
-plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data") 
-plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
-plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
 
 
-plot(x=log(huvec) ,y=log(iris),xlab="huvec",ylab="iris", main="Scatterplot of raw data") 
-plot(x=log(huvec) ,y=log(retina),xlab="huvec",ylab="retina", main="Scatterplot of raw data") 
-plot(x=log(huvec) ,y=log(choroid),xlab="huvec",ylab="choroid", main="Scatterplot of raw data") 
 
-#huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
-#huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
-#huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
-#plot(huvec_iris)
-#plot(huvec_retina)
-#plot(huvec_choroid)
+
+huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
+huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
+huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
+plot(huvec_iris)
+plot(huvec_retina)
+plot(huvec_choroid)
 
 
 
