@@ -10,8 +10,10 @@ output:
 
 
 ```{r include=FALSE}
-library(R.ROSETTA)
-autconDefault = rosetta(autcon)
+load("Rosetta_Lab5.RData")
+#library(R.ROSETTA)
+# autconDefault = rosetta(autcon)
+autconDefault
 ```
 
 ```{r echo=TRUE}
@@ -69,9 +71,6 @@ Mean support: 15.615
 
 #Appendix
 ```{r eval=FALSE, show = TRUE}
-install.packages("devtools")
-library(devtools)
-install_github("mategarb/R.ROSETTA")
 library(R.ROSETTA)
 View(autcon)
 data("autcon")
@@ -88,4 +87,7 @@ autconDefault$quality
 autconDefault$main[1:3,]
 length(autconDefault$main[which(autconDefault$main$PVAL <0.05),])
 saveLineByLine(autconDefault$main, "rules.txt")
+save.image(file = "Rosetta_Lab5.RData")
+load("Rosetta_Lab5.RData")
+
 ```
