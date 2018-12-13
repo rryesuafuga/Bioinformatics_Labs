@@ -15,6 +15,7 @@ library(seqinr)
 library(phangorn)
 library(markovchain)
 library(msa)
+set.seed(123)
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, include=TRUE)
 ```
 
@@ -100,7 +101,7 @@ print("Base composition of the first sequence of the AI gene: ")
 print(count(ai_gene_1.1[[1]],1)/length(ai_gene_1.1[[1]]))
 
 ```
-The composition is quite similar. There is a small different because the ai_gene only have "a" "g" "c" or "t". While the original gene rearly has "y", "m", "r"...
+The composition is quite similar. There is a small different because the ai_gene only have "a" "g" "c" or "t". While the original gene rearly has "y", "m", "r"... "y"" mean "c" or "t", "m" means "a" or "c", "r" means "a" or "g".
 
 ## 1.2 Artificial DNA sequence dataset using phangorn::simSeq() function.
 Here is the phylogenetic tree with 33 tips:
@@ -211,17 +212,30 @@ We also observed the stop codons both in the original and the simulated sequence
 We observed **1269 stop codons** in the original sequence. And set.seed(123), we observed **1332 stop codons** in the first AI simulated sequence and very surprisingly only **491** stop codons in the second AI simulated sequence. Likewise, the amino acid composition changed with each simulation due to the randomisation.
 
 
+
 ### 2.2: Markov chain
 We decided to use the `markovchain` library to fit the markovchanin model. Here is the resutl:
 
 ```{r}
+clean2 <- function(template_gene){
+  nucleotide <- c("a", "c", "g", "t")
+  for (i in 1:length(template_gene)) {
+    #Remove the " " that created when reading a file
+    template_gene[[i]] <- template_gene[[i]][template_gene[[i]]!= " "]
+    #Remove the character that not normal nucleotide (a, c, t, g)
+    template_gene[[i]] <- template_gene[[i]][grepl(paste0(nucleotide, collapse = "|"), template_gene[[i]])]
+  }
+  return(template_gene)
+}
+
+lizards_sequences <- clean2(lizards_sequences)
 library(markovchain)
 markovchainFit(lizards_sequences)
 markovchainFit(ai_gene_1.1)
 markovchainFit(ai_gene_1.2)
 ```
 
-Markov chain order: We use the ``fitHigherOrder`` funcion. Based on the below result (for the first sequences), we concluded that all genes have a high order. Maybe because we only have 4 nucleotide.
+Markov chain order: We use the ``fitHigherOrder`` funcion. Based on the below result (for the first sequences), we concluded that all genes have a high order. For the lizard sequence, it make sense because we have 3 nucleotide for each protein code. So we should have at least 3rd order. For the AI genes, the high order could be by chance of probability 
 
 ```{r}
 #2.2
