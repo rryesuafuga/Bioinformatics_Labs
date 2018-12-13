@@ -182,9 +182,10 @@ volcano +
 ##Question2
 
 The three constrast are:
-  + huvec - choroid, 
-  + huvec - retina, 
-  + huvec - iris
+  + huvec - choroid,   
+  + huvec - retina,   
+  + huvec - iris  
+    
 We will choose the first sample of each type to make analysis. Here is the plots of raw data.
 ```{r}
 iris <- eset[,1]
@@ -203,18 +204,18 @@ And here, for the normalized data:
 huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
 huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
 huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
-plot(huvec_iris)
-plot(huvec_retina)
-plot(huvec_choroid)
+plot(huvec_iris, main="Scatterplot of normalized data")
+plot(huvec_retina, main="Scatterplot of normalized data")
+plot(huvec_choroid, main="Scatterplot of normalized data")
 ```
 
 
 And here is log-scaled graph
 
 ```{r}
-plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of raw data",log=c('x','y')) 
-plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of raw data",log=c('x','y')) 
-plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of raw data",log=c('x','y')) 
+plot(x=huvec ,y=iris,xlab="huvec",ylab="iris", main="Scatterplot of log raw data",log=c('x','y')) 
+plot(x=huvec ,y=retina,xlab="huvec",ylab="retina", main="Scatterplot of log raw data",log=c('x','y')) 
+plot(x=huvec ,y=choroid,xlab="huvec",ylab="choroid", main="Scatterplot of log raw data",log=c('x','y')) 
 ```
 
 
@@ -223,9 +224,9 @@ Here is log-scaled graph tirh normalized data
 huvec_iris <- pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","iris"))
 huvec_retina <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","retina"))
 huvec_choroid <-pairwise.comparison(celfiles.gcrma,"Targets",c("huvec","choroid"))
-plot(huvec_iris,log=c('x','y'))
-plot(huvec_retina,log=c('x','y'))
-plot(huvec_choroid,log=c('x','y'))
+plot(huvec_iris,log=c('x','y'), main="Scatterplot of log normalized data")
+plot(huvec_retina,log=c('x','y'), main="Scatterplot of log normalized data")
+plot(huvec_choroid,log=c('x','y'), main="Scatterplot of log normalized data")
 ```
 
 Here is MA plot
@@ -237,9 +238,9 @@ chronoid_huvec <- eset[,c(7,10)]
 library(affy)
 #inspired by wiki
 
-ma.plot( rowMeans(log2(iris_huvec)), log2(iris_huvec[, 1])-log2(iris_huvec[, 2]), cex=1 )
-ma.plot( rowMeans(log2(retina_huvec)), log2(retina_huvec[, 1])-log2(retina_huvec[, 2]), cex=1 )
-ma.plot( rowMeans(log2(chronoid_huvec)), log2(chronoid_huvec[, 1])-log2(chronoid_huvec[, 2]), cex=1 )
+ma.plot( rowMeans(log2(iris_huvec)), log2(iris_huvec[, 1])-log2(iris_huvec[, 2]), cex=1 , main="MA plot of raw data")
+ma.plot( rowMeans(log2(retina_huvec)), log2(retina_huvec[, 1])-log2(retina_huvec[, 2]), cex=1, main="MA plot of raw data" )
+ma.plot( rowMeans(log2(chronoid_huvec)), log2(chronoid_huvec[, 1])-log2(chronoid_huvec[, 2]), cex=1, main="MA plot of raw data" )
 
 ```
 
@@ -256,9 +257,9 @@ norm_chronoid_huvec <- normalize.quantiles(chronoid_huvec)
 
 
 ##normalized
-ma.plot( rowMeans(log2(norm_iris_huvec)), log2(norm_iris_huvec[, 1])-log2(norm_iris_huvec[, 2]), cex=1 )
-ma.plot( rowMeans(log2(norm_retina_huvec)), log2(norm_retina_huvec[, 1])-log2(norm_retina_huvec[, 2]), cex=1 ) 
-ma.plot( rowMeans(log2(norm_chronoid_huvec)), log2(norm_chronoid_huvec[, 1])-log2(norm_chronoid_huvec[, 2]), cex=1 ) 
+ma.plot( rowMeans(log2(norm_iris_huvec)), log2(norm_iris_huvec[, 1])-log2(norm_iris_huvec[, 2]), cex=1, main="MA plot of normalized data" )
+ma.plot( rowMeans(log2(norm_retina_huvec)), log2(norm_retina_huvec[, 1])-log2(norm_retina_huvec[, 2]), cex=1 , main="MA plot of normalized data") 
+ma.plot( rowMeans(log2(norm_chronoid_huvec)), log2(norm_chronoid_huvec[, 1])-log2(norm_chronoid_huvec[, 2]), cex=1 , main="MA plot of normalized data") 
 
 
 ```
@@ -269,7 +270,7 @@ And here is the heat map:
 ```{r}
 par(mfrow=c(1,2))
 heatmap(as.matrix(distance), main = "Raw data")
-heatmap(as.matrix(distance2), main = "normalized data")
+heatmap(as.matrix(distance2), main = "Normalized data")
 ```
 
 ## Question 3
@@ -331,3 +332,34 @@ volcano +
   geom_text(data = subset(results, logFC > 5 & -1*log10(adj.P.Val) > 5), aes(x = logFC, y = -1*log10(adj.P.Val), colour = threshold, label = getsymbols)  )
 
 ```
+
+The most indicate signifcantly diferentially expressed genes in all vocano plots is "HOXB7" and "IL1RL1"
+
+##Question 4
+
+**HOXB7:**
+This protein is a member of the Antp homeobox family.
+It encodes a protein with a homeobox DNA-binding domain.
+It is included in a cluster of homeobox B genes located on chromosome 17.
+
+GO ID	      | Qualified GO term
+----------- | -------------
+GO:0000978  |	RNA polymerase II proximal promoter sequence-specific DNA binding	
+GO:0000981	| RNA polymerase II transcription factor activity, sequence-specific 
+GO:0001077	| transcriptional activator activity, RNA polymerase II proximal promoter sequence-specific DNA binding	
+GO:0003677	| DNA binding
+GO:0003700	| DNA binding transcription factor activity
+
+
+**IL1RL1**
+A a member of the interleukin 1 receptor family.
+This receptor can be induced by proinflammatory stimuli, and may be involved in the function of helper T cells
+This gene is in a cluster in a region mapped to chromosome 2q12.
+
+GO ID	      | Qualified GO term
+----------- | -------------
+GO:0002113	| interleukin-33 binding	
+GO:0002114	| interleukin-33 receptor activity	
+GO:0004896	| cytokine receptor activity	
+GO:0004908	| interleukin-1 receptor activity	
+GO:0005057	| obsolete signal transducer activity, downstream of receptor

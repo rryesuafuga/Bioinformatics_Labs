@@ -149,7 +149,7 @@ chronoid_huvec <- eset[,c(7,10)]
 library(affy)
 #inspired by wiki
 
-ma.plot( rowMeans(log2(iris_huvec)), log2(iris_huvec[, 1])-log2(iris_huvec[, 2]), cex=1 )
+ma.plot( rowMeans(log2(iris_huvec)), log2(iris_huvec[, 1])-log2(iris_huvec[, 2]), cex=1,main="Scatterplot of raw data"  )
 ma.plot( rowMeans(log2(retina_huvec)), log2(retina_huvec[, 1])-log2(retina_huvec[, 2]), cex=1 )
 ma.plot( rowMeans(log2(chronoid_huvec)), log2(chronoid_huvec[, 1])-log2(chronoid_huvec[, 2]), cex=1 )
 
