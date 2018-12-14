@@ -12,7 +12,9 @@ View(autcon)
 
 
 # 2
+ncol(autcon)-1
 ## 35 features
+
 # number of objects in each class
 summary(autcon$decision)
 
@@ -23,10 +25,19 @@ table_rule <- autconDefault$main
 
 autconDefault$quality
 
-## 3a 10 cross validations
-## 3b Johnson
-## 3c Equal Frequency 3 bins
-## 3d  0.821818 mean ...., meadian
+## 3a 10 cross validations (from Rosetta documentation)
+
+## 3b Johnson (from Rosetta documentation)
+## A reduct is a minimal subset of attributes such that it preserves
+## indiscernibility between objects
+
+## 3c Equal Frequency 3 bins (from Rosetta documentation)
+## Discritization is when you classify values obtained from measuring a 
+## phenomenon into distinct states. For example, recording temperature values 
+## ranging from 34.5 to 37 degrees centigrade as "Fever", "Normal" and
+## "Hyperthermia.
+
+## 3d  0.821818 mean, 0.8 median
 
 ## 3e 
 table_rule[1:3,]
