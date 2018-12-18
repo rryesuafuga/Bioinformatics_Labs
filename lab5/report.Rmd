@@ -69,6 +69,8 @@ Connection: 193.54575
 Mean accuracy: 0.953
 Mean support: 15.615
 
+We can find the gene NCKAP5L at the webpage provided. We can see that this is rare single gene mutation and is reported in association with autism. In this article: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5299575/ we can also see that there is a connection between MAP7 gene and autism (and also schizophrenia). According to informations in wikigenes we can see that PPOX gene has some influence on mental health. We didn't find any evidence of strong relation of NPR2 gene to autism.
+
 #Appendix
 ```{r eval=FALSE, show = TRUE}
 library(R.ROSETTA)
