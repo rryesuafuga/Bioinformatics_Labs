@@ -690,6 +690,42 @@ mvslouchModel(tree_ouch, kY=1,
 
 ## comparison of the above five models
 
+```{r, eval=TRUE, echo=FALSE}
+
+model1=c("Both traits evolve as independent Brownian motions", 1186.475, 1186.771)
+
+model2=c("The traits evolve as a correlated Brownian motion", 1323.473, 1323.921)
+
+model3=c("independent Ornstein Uhlenbeck processes", 654.5278, 654.8914)
+
+model4=c("traits evolve as a bivariate Ornstein-Uhlenbeck process", 
+         1161.213, 1162.312)
+
+model5=c("size evolves as a Brownian motion and range as an Ornstein Uhlenbeck", 
+         1295.603, 1296.235)
+
+comparison_matrix <- rbind(model1, model2, model3, model4, model5)
+comparison_matrix <- as.data.frame(comparison_matrix)
+comparison_matrix[,2] <- as.numeric(as.character(comparison_matrix[,2]))
+comparison_matrix[,3] <- as.numeric(as.character(comparison_matrix[,3]))
+names(comparison_matrix) <- c("model", "AIC", "AIC.c")
+
+```
+
+
+
+```{r}
+print(comparison_matrix)
+
+```
+**From the above comparison matrix of AIC and AICs, we can see that the model were the traits are modeled as independent Ornstein Uhlenbeck processes has the lowest values of 654.5278 for AIC and 654.8914 for AICc. The lowest AIC and AICc values are the most desirable.** 
+
+From Wikipedia,
+
+> "AIC estimates the relative information lost by a given model: the less information a model loses, the higher the quality of that model." 
+
+**Therefore, this is the best model among the five.**
+
 
 
 # Appendix
