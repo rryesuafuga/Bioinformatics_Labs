@@ -288,7 +288,7 @@ The following is one of the mathematical representations of a Ornstein-Uhlenbeck
 
 \ 
 
-**This shows that the OU process comprises a Wiener process component (Brownian motion component.) When we modeled the changes in both the size and range traits, we obtained theta and sigma values. The theta and sigma values help us compare the two traits. The size trait has a theta value of 38.43947 which is bigger than the theta value for range of 11.08609. Given the above shown differential question, this implies that the Ornstein-Uhlenbeck change process of size trait is bigger than that of the range trait. Additionally concerning the sigma values, the size trait has a bigger sigma value of 73.70246 as compared to that of the range trait of 38.05329. The sigma value is the Wiener process drift term. That means that the change in the size trait takes longer to reach equilibrium (or stabilise) as compared to the change in the range trait. This model has AIC of 654.5278 and  AICc of 654.8914**
+**This shows that the OU process comprises a Wiener process component (Brownian motion component.) When we modeled the changes in both the size and range traits, we obtained theta and sigma values. The theta and sigma values help us compare the two traits. The size trait has a theta value of 38.43947 which is bigger than the theta value for range of 11.08609. Given the above shown differential question, this implies that the Ornstein-Uhlenbeck change process of size trait is bigger than that of the range trait. Additionally concerning the sigma values, the size trait has a bigger sigma value of 73.70246 as compared to that of the range trait of 38.05329. The sigma value is the Wiener process drift term. That means that the change in the size trait takes longer to reach equilibrium (or stabilise) as compared to the change in the range trait. The size trait has an AIC of 654.5278 and  AICc of 654.8914. The range trait has an AIC of 503.979 and an AICc of 504.3427. The sum of the AIC for both traits is 1158.5068 and that for AICc is 1159.2341**
 
 
 ### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
@@ -317,7 +317,7 @@ model1=c("Both traits evolve as independent Brownian motions", 1186.475, 1186.77
 
 model2=c("Both traits as a correlated Brownian motion", 1323.473, 1323.921)
 
-model3=c("both traits asindependent Ornstein Uhlenbeck processes", 654.5278, 654.8914)
+model3=c("both traits as independent Ornstein Uhlenbeck processes", 1158.5068, 1159.2341)
 
 model4=c("both traits as bivariate Ornstein-Uhlenbeck processes", 
          1161.213, 1162.312) 
@@ -340,13 +340,11 @@ rownames(comparison_matrix) <- NULL
 print(comparison_matrix[,1:2])
 
 ```
-**From the above comparison matrix of Akaike information criterion values only, we can see that the model were the traits are independent Ornstein Uhlenbeck processes has the lowest values of 654.5278 for AIC. AIC values are used to compare different models.** 
 
 From Wikipedia,
 
 > "AIC estimates the relative information lost by a given model: the less information a model loses, the higher the quality of that model." 
 
-**This means that among the above five models, the independent Ornstein Uhlenbeck process loses the least information about the traits.**
 
 
 
