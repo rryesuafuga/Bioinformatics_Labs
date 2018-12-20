@@ -337,14 +337,14 @@ From Wikipedia,
 
 > "AIC estimates the relative information lost by a given model: the less information a model loses, the higher the quality of that model." 
 
-Therefore, we made an estimation for the amount of information that is lost in the combination of the size trait and the range trait when each is modeled as an independent Ornstein Uhlenbeck processes. We made a comparison with the model were both of them jointly are modeled as a bivariate Ornstein-Uhlenbeck process. When we split the AIC for the bivariate process of 1161.213 in the ratio of the AIC for independent processes, 654.5278 for size to AIC 503.979 for range, we get **656.0567 for size and 505.1563 for range. These new comparison AIC values are higher than those we got from running the models.** This means that slightly more information is lost in the bivariate process than in the independent processes. Therefore, it is safe to conclude that the independent processes are better than the bivariate process. Since the sum of the AIC values for the independent processes (1158.5068) remains lower than the AIC value for the bivariate process (1161.213).
+Therefore, we made an estimation for the amount of information that is lost in the combination of the size trait and the range trait when each is modeled as an independent Ornstein Uhlenbeck processes. We made a comparison with the model were both of them jointly are modeled as a bivariate Ornstein-Uhlenbeck process. When we split the AIC for the bivariate process of 1161.213 in the ratio of the AIC for independent processes, 654.5278 for size to AIC 503.979 for range, we get **656.0567 for size and 505.1563 for range. These new comparison AIC values are higher than those we got from running the models.** This means that slightly more information is lost in the bivariate process than in the independent processes. Therefore, it is safe to conclude that the independent processes are better than the bivariate process. Since the sum of the AIC values for the independent processes (1158.5068) remains lower than the AIC value for the bivariate process (1161.213), it is a good approximation to use.
 
 
 ```{r}
 print(comparison_matrix[,1:2])
 
 ```
-
+**Therefore, we conclude that the best model to use is the one with the lowest (though hypothetical) value of AIC. That best model is  the size trait and the range trait each as an independent Ornstein Uhlenbeck process.**
 
 
 
