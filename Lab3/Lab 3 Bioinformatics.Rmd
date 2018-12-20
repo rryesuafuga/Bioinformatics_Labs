@@ -1,5 +1,5 @@
 ---
-title: "Lab 3 Question 2 Bioinformatics"
+title: "Lab 3 Bioinformatics"
 author: "Duc Doung, Martin Smelik, Raymond Sseguya"
 date: "2018 M12 8"
 output: pdf_document
@@ -14,6 +14,175 @@ library(ouch)
 library(mvSLOUCH)
 
 ```
+
+
+## Assignment 1
+
+### 1.1
+
+**In Chapter 3 we read the sequences and use clustal function for multiple sequence alignment and we use mafft function for alignemnt of the sequences. Then we just name the sequences and save the data.**
+
+**In Chapter 5 we compute the distance matrices for according to six different models. With two of the obtained distances we compute nj trees. We use one of the leaves as root and perform bootsraping to see how reliable the tree is. We did not manage to make work this line "phyml.sylvia <- phymltest("sylvia.txt", execname = "~/phyml")" and therefore we could not perform analysis related to it. Using the function chronopl with cross validation we estimated the node ages and saved this as sylvia.chrono.**
+
+**In Chapter 6 we are using the ace function to see the properties of geographical range. With this we can see the likelihoods of the range. With information from geo_range we can fill the leaves with corresponding colors and using the likelihood we can fill the nodes with the colors corresponding to the likelihood**
+
+### 1.2
+
+```{r include=FALSE}
+library(ape)
+
+###
+### Chapter 3
+###
+
+x <- paste("AJ5345", 26:49, sep = "")
+x <- c("Z73494", x)
+sylvia.seq <- read.GenBank(x)
+
+sylvia.clus <- clustal(sylvia.seq)  ## storing to the matrix
+library(phyloch)
+
+## Martin ..... Please change the following lines if you knit to pdf ....
+# sylvia.maff <- mafft(sylvia.seq, path = #"C:/Users/smelo/Downloads/mafft/mafft-win/mafft")
+sylvia.maff <- mafft(sylvia.seq, 
+    path = "C:/Users/rsseg/Downloads/mafft-win/mafft")
+
+
+#sylvia.maff <- mafft(sylvia.seq)
+identical(sylvia.clus[x, ], sylvia.maff[x, ])
+
+taxa.sylvia <- attr(sylvia.seq, "species")
+names(taxa.sylvia) <- names(sylvia.seq)
+rm(sylvia.seq)
+taxa.sylvia[1] <- "Sylvia_atricapilla"
+taxa.sylvia[24] <- "Sylvia_abyssinica"
+
+sylvia.eco <- read.table("sylvia_data.txt")
+str(sylvia.eco)
+rownames(sylvia.eco)
+save(sylvia.clus, taxa.sylvia, sylvia.eco,
+     file = "sylvia.RData")
+
+###
+### Chapter 5
+###
+
+syl.K80 <- dist.dna(sylvia.clus, pairwise.deletion = TRUE)
+syl.F84 <- dist.dna(sylvia.clus, model = "F84", p = TRUE)
+syl.TN93 <- dist.dna(sylvia.clus, model = "TN93", p = TRUE)
+syl.GG95 <- dist.dna(sylvia.clus, model = "GG95", p = TRUE)
+
+round(cor(cbind(syl.K80, syl.F84, syl.TN93, syl.GG95)), 3)
+
+syl.JC69 <- dist.dna(sylvia.clus, model = "JC69", p = TRUE)
+syl.raw <- dist.dna(sylvia.clus, model = "raw", p = TRUE)
+layout(matrix(1:2, 1))
+plot(syl.JC69, syl.raw)
+abline(b = 1, a = 0) # draw x = y line
+plot(syl.K80, syl.JC69)
+abline(b = 1, a = 0)
+
+layout(matrix(1:3, 1))
+for (i in 1:3) {
+  s <- logical(3); s[i] <- TRUE
+  x <- sylvia.clus[, s]
+  d <- dist.dna(x, p = TRUE)
+  ts <- dist.dna(x, "Ts", p = TRUE)
+  tv <- dist.dna(x, "Tv", p = TRUE)
+  plot(ts, d, xlab = "Number of Ts or Tv", col = "blue",
+       ylab = "K80 distance", xlim = range(c(ts, tv)),
+       main = paste("Position", i))
+  points(tv, d, col = "red")
+}
+
+y <- numeric()
+for (i in 1:3) {
+  s <- logical(3); s[i] <- TRUE
+  y <- c(y, dist.dna(sylvia.clus[, s], p = TRUE))
+}
+g <- gl(3, length(y) / 3)
+library(lattice)
+histogram(~ y | g, breaks = 20)
+
+nj.sylvia.K80 <- nj(syl.K80)
+nj.sylvia.GG95 <- nj(syl.GG95)
+dist.topo(nj.sylvia.K80, nj.sylvia.GG95)
+
+grep("Chamaea", taxa.sylvia, value = TRUE)
+f <- function(xx) root(nj(dist.dna(xx, p=TRUE)), "AJ534526")
+#tr <- f(sylvia.clus)
+## same than: 
+tr <- root(nj.sylvia.K80, "AJ534526")
+nj.boot.sylvia <- boot.phylo(tr, sylvia.clus, f, 200,
+                             rooted = TRUE)
+nj.boot.codon <- boot.phylo(tr, sylvia.clus, f, 200, 3,
+                            rooted = TRUE)
+nj.est <- tr
+nj.est$tip.label <- taxa.sylvia[tr$tip.label]
+plot(nj.est, no.margin = TRUE)
+nodelabels(round(nj.boot.sylvia / 200, 2), bg = "white")
+add.scale.bar(length = 0.01)
+write.tree(nj.est, "sylvia_nj_k80.tre")
+
+write.dna(sylvia.clus, "sylvia.txt") 
+#phyml.sylvia <- phymltest("sylvia.txt", execname = "~/phyml") ##ignore
+#summary(phyml.sylvia) ##ignore
+#plot(phyml.sylvia, col = "black") ##ignore
+#TR <- read.tree("sylvia.txt_phyml_tree.txt") ##ignore
+#mltr.sylvia <- TR[[28]]  ##ignore
+#mltr.sylvia$tip.label <- taxa.sylvia[mltr.sylvia$tip.label]  ##ignore
+#mltr.sylvia <- root(mltr.sylvia, "Chamaea_fasciata")  ##ignore
+#plot(mltr.sylvia, no.margin = TRUE)  ##ignore
+#add.scale.bar(length = 0.01)  ##ignore
+
+
+#tr.ml <- drop.tip(mltr.sylvia, "Chamaea_fasciata")
+tr.ml <- drop.tip(nj.est, "Chamaea_fasciata")
+res <- vector("list", 9)
+for (L in -4:4)
+  res[[L + 5]] <- chronopl(tr.ml, 10^L, 12, 16, CV = TRUE)
+Lambda <- 10^(-4:4)
+CV <- sapply(res, function(x) sum(attr(x, "D2")))
+plot(Lambda, CV / 1e5, log = "x")
+
+sylvia.chrono <- res[[2]]
+rts <- attr(sylvia.chrono, "rates")
+summary(rts)
+
+par(mar = c(2, 0, 0, 0))
+plot(sylvia.chrono, edge.width = 100*rts, label.offset = .15)
+axisPhylo()
+write.tree(sylvia.chrono, "sylvia.chrono.tre")
+
+###
+### Chapter 6
+###
+
+load("sylvia.RData")
+nj.est <- read.tree("sylvia_nj_k80.tre")
+nj.est <- drop.tip(nj.est, "Chamaea_fasciata")
+DF <- sylvia.eco[nj.est$tip.label, ]
+table(DF$geo.range, DF$mig.behav)
+
+gr_sym <- ace(DF$geo.range, nj.est, type="d", model="SYM")
+gr_er <- ace(DF$geo.range, nj.est, type="d", model="ER")
+gr_ard <- ace(DF$geo.range, nj.est, type="d", model="ARD")
+
+```
+
+```{r}
+
+gr_sym$rates
+gr_sym$se
+gr_er$rates
+gr_er$se
+gr_ard$rates
+gr_ard$se
+
+```
+
+**We used 3 different models for analyzing the geographical range variable. In the results we can see the maximum likelihood estimates of the transition rates and also standard errors of these rates. First model corresponds to symmetrical model, the second one corresponds to the equal-rates model and the last one to all-rates-different model. Our goal is for sure minimize the standard errors. We can see that the lowest standard error we can get is with equal-rates model.**
+
 
 
 # Assignment 2
@@ -42,7 +211,7 @@ hist(carni70_2$size, xlab="size trait", main = "Histogram of Size")
 boxplot(carni70_2$size, main="Size")
 
 ```
-**The distribution of the size trait is skewed to the left. In other words, the majority of the 70 species have small sizes. Some of the species have outlier sizes.**
+**The distribution of the size trait is skewed to the right. In other words, the majority of the 70 species have small sizes. Some of the species have outlier sizes.**
 
 
 ```{r, echo=FALSE}
@@ -50,7 +219,7 @@ hist(carni70_2$range, xlab="range trait", main = "Histogram of Range")
 boxplot(carni70_2$range, main="Range")
 
 ```
-**The distribution of the range trait is also generally more balanced however with eveident skewness to the left. There are fewer and fewer species with longer ranges.** 
+**The distribution of the range trait is also generally more balanced however with evident skewness to the right. There are fewer and fewer species with longer ranges.** 
 
 
 ```{r, echo=FALSE}
@@ -90,7 +259,7 @@ plot(tree_phylo)
 mvMORPH::mvBM(tree_phylo, carni70$tab, model="BM1", 
              param = list(constraint = "diagonal"))
 ```
-**Because of the assumption that the two traits follow independent processes, the off diagonal elements of the estimated rate matrix are zero. From the rate matrix, we see that the changes in the size trait along the phylogenetic tree are more frequent (at 73) than the changes of the range trait on the same tree. That explains why the histogram of the size trait is more left skewed than that of the range trait (13). This model also suggests that the ancestor(root) had a size of 38.43947 and a range of 13.78439.**
+**Because of the assumption that the two traits follow independent processes, the off diagonal elements of the estimated rate matrix are zero. From the rate matrix, we see that the changes in the size trait along the phylogenetic tree are more frequent (at 73) than the changes of the range trait on the same tree. That explains why the histogram of the size trait is more left skewed than that of the range trait (13). This model also suggests that the ancestor(root) had a size of 38.43947 and a range of 13.78439. This model has AIC of 1186.475 and AICc of 1186.771**
 
 
 ### 2.2.2 The traits evolve as a correlated Brownian motion
@@ -100,7 +269,7 @@ tree_ouch <- ouch::ape2ouch(tree_phylo, branch.lengths = tree_phylo$edge.length)
 library(mvSLOUCH)
 mvSLOUCH::BrownianMotionModel(tree_ouch, data = as.matrix(carni70$tab))
 ```
-**Under the assumption that the two traits follow correlated Brownian motion processes, the ancestor (root) had a size of 8.434762 and a range of 11.084473. Even under this model, the size trait changes more frequently than the range trait, with 29383.3025 for size versus 678.3047 for range. The difference between size and range is clearly indicated in the skewnesses of histograms.**
+**Under the assumption that the two traits follow correlated Brownian motion processes, the ancestor (root) had a size of 8.434762 and a range of 11.084473. Even under this model, the size trait changes more frequently than the range trait, with 29383.3025 for size versus 678.3047 for range. The difference between size and range is clearly indicated in the skewnesses of histograms. This model has AIC of 1323.473 and AIC.c of 1323.921**
 
 
 
@@ -119,7 +288,7 @@ The following is one of the mathematical representations of a Ornstein-Uhlenbeck
 
 \ 
 
-**This shows that the OU process comprises a Wiener process component (Brownian motion component.) When we modeled the changes in both the size and range traits, we obtained theta and sigma values. The theta and sigma values help us compare the two traits. The size trait has a theta value of 38.43947 which is bigger than the theta value for range of 11.08609. Given the above shown differential question, this implies that the Ornstein-Uhlenbeck change process of size trait is bigger than that of the range trait. Additionally concerning the sigma values, the size trait has a bigger sigma value of 73.70246 as compared to that of the range trait of 38.05329. The sigma value is the Wiener process drift term. That means that the change in the size trait takes longer to reach equilibrium (or stabilise) as compared to the change in the range trait.**
+**This shows that the OU process comprises a Wiener process component (Brownian motion component.) When we modeled the changes in both the size and range traits, we obtained theta and sigma values. The theta and sigma values help us compare the two traits. The size trait has a theta value of 38.43947 which is bigger than the theta value for range of 11.08609. Given the above shown differential question, this implies that the Ornstein-Uhlenbeck change process of size trait is bigger than that of the range trait. Additionally concerning the sigma values, the size trait has a bigger sigma value of 73.70246 as compared to that of the range trait of 38.05329. The sigma value is the Wiener process drift term. That means that the change in the size trait takes longer to reach equilibrium (or stabilise) as compared to the change in the range trait. The size trait has an AIC of 654.5278 and  AICc of 654.8914. The range trait has an AIC of 503.979 and an AICc of 504.3427. The sum of the AIC for both traits is 1158.5068 and that for AICc is 1159.2341**
 
 
 ### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
@@ -127,7 +296,7 @@ The following is one of the mathematical representations of a Ornstein-Uhlenbeck
 mvMORPH::mvOU(tree_phylo, data=carni70$tab, model = c("OU1"), 
                diagnostic = TRUE, echo = TRUE)
 ```
-**This model does not give us notable new information from the earlier approaches. However, it is worth noting that the model gives us a very low log likelihood of -572.6063 which is very good. This means it is one of the good models to study further**
+**This model does not give us notable new information from the earlier approaches. However, it is worth noting that the model has AIC of 1161.213 and AICc of 1162.312**
 
 
 ### 2.2.5 size evolves as a Brownian motion and range as an Ornstein Uhlenbeck
@@ -136,12 +305,56 @@ mvslouchModel(tree_ouch, kY=1,
       data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
 ```
 
-**The model, where the size changes as a Brownian motion and range as an Ornstein Uhlenbeck process is perhaps the best model because it has the lowest log likelihood of -641.8002. The objective is the minimise the log likelihood therefore this fifth model gives the best result in that regard.**
+**The model has AIC of 1295.603 and AIC.c of 1296.235. The R output of this model is included in the Appendix.**
 
-**Below is the output from the R Console.**
+
+
+## comparison of the above five models
+
+```{r, eval=TRUE, echo=FALSE}
+
+model1=c("Both traits evolve as independent Brownian motions", 1186.475, 1186.771)
+
+model2=c("Both traits as a correlated Brownian motion", 1323.473, 1323.921)
+
+model3=c("both traits as independent Ornstein Uhlenbeck processes", 1158.5068, 1159.2341)
+
+model4=c("both traits as bivariate Ornstein-Uhlenbeck processes", 
+         1161.213, 1162.312) 
+
+model5=c("size as Brownian motion and range as Ornstein Uhlenbeck", 
+         1295.603, 1296.235)
+
+comparison_matrix <- rbind(model1, model2, model3, model4, model5)
+comparison_matrix <- as.data.frame(comparison_matrix)
+comparison_matrix[,2] <- as.numeric(as.character(comparison_matrix[,2]))
+comparison_matrix[,3] <- as.numeric(as.character(comparison_matrix[,3]))
+colnames(comparison_matrix) <- c("model", "AIC", "AIC.c")
+rownames(comparison_matrix) <- NULL
+
+```
+From Wikipedia,
+
+> "AIC estimates the relative information lost by a given model: the less information a model loses, the higher the quality of that model." 
+
+Therefore, we made an estimation for the amount of information that is lost in the combination of the size trait and the range trait when each is modeled as an independent Ornstein Uhlenbeck processes. We made a comparison with the model were both of them jointly are modeled as a bivariate Ornstein-Uhlenbeck process. When we split the AIC for the bivariate process of 1161.213 in the ratio of the AIC for independent processes, 654.5278 for size to AIC 503.979 for range, we get **656.0567 for size and 505.1563 for range. These new comparison AIC values are higher than those we got from running the models.** This means that slightly more information is lost in the bivariate process than in the independent processes. Therefore, it is safe to conclude that the independent processes are better than the bivariate process. Since the sum of the AIC values for the independent processes (1158.5068) remains lower than the AIC value for the bivariate process (1161.213).
 
 
 ```{r}
+print(comparison_matrix[,1:2])
+
+```
+
+
+
+
+# Appendix
+```{r, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+
+```
+
+
+```{r, echo=FALSE}
 
 # [1] "Starting point of heuristic search procedure : "
 #          A        Syy 
@@ -512,7 +725,6 @@ mvslouchModel(tree_ouch, kY=1,
 # 
 # $MaxLikFound$LogLik
 # [1] -641.8002
-# 
 # 
 
 

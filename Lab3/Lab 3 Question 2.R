@@ -42,18 +42,6 @@ tree_phylo <- ape::read.tree(text=carni70_1)
 plot(tree_phylo)
 
 
-# is.binary.tree(tree_phylo)
-# tree2 <- multi2di(tree_phylo)
-# size2 <- pic(carni70_2$size, tree2)
-# range2 <- pic(carni70_2$range, tree2)
-# z <- lm(size2 ~ range2 - 1)    # the "-1" forces line through origin
-# summary(z)
-# correlationz <- sqrt(summary(z)$r.squared)
-# ## no correlation
-# bm.tree = fastBM(tree_phylo, a=0, sig2=1.0, internal = TRUE)
-# phenogram(tree_phylo, bm.tree, spread.labels = TRUE)
-# vcv.phylo(tree_phylo, cor=TRUE)
-
 ## 2.2
 
 ### 2.2.1 Both traits evolve as independent Brownian motions
@@ -85,3 +73,26 @@ mvMORPH::mvOU(tree_phylo, data=carni70$tab, model = c("OU1"),
 ### 2.2.5 size evolves as a Brownian motion and range as an Ornstein Uhlenbeck
 mvslouchModel(tree_ouch, kY=1, 
               data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
+
+
+
+model1=c("Both traits evolve as independent Brownian motions", 1186.475, 1186.771)
+
+model2=c("Both traits as a correlated Brownian motion", 1323.473, 1323.921)
+
+model3=c("both traits as independent Ornstein Uhlenbeck processes", 1158.5068, 1159.2341)
+
+model4=c("both traits as bivariate Ornstein-Uhlenbeck processes", 
+         1161.213, 1162.312) 
+
+model5=c("size as Brownian motion and range as Ornstein Uhlenbeck", 
+         1295.603, 1296.235)
+
+comparison_matrix <- rbind(model1, model2, model3, model4, model5)
+comparison_matrix <- as.data.frame(comparison_matrix)
+comparison_matrix[,2] <- as.numeric(as.character(comparison_matrix[,2]))
+comparison_matrix[,3] <- as.numeric(as.character(comparison_matrix[,3]))
+colnames(comparison_matrix) <- c("model", "AIC", "AIC.c")
+rownames(comparison_matrix) <- NULL
+
+print(comparison_matrix[,1:2])
