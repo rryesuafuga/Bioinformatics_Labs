@@ -211,7 +211,7 @@ We also observed the stop codons both in the original and the simulated sequence
 
 We observed **1269 stop codons** in the original sequence. Using set.seed(123), we observed **1332 stop codons** in the first AI simulated sequence and very surprisingly only **491 stop codons** in the second AI simulated sequence. Likewise, the amino acid composition changed with each simulation due to the randomisation.
 
-Again, still using set.seed(123), when we reversed and complemented the sequences, we observed **897 stop codons** for the original sequence, **1107 stop codons** for the first simulated sequence and **527 stop codons** for the second simulated sequence.
+Again, still using set.seed(123), when we reversed and complemented the sequences, plus using ORF. The smallest number of stop codon is recored as follow: **897 stop codons** for the original sequence, **1107 stop codons** for the first simulated sequence and **527 stop codons** for the second simulated sequence.
 
 
 
