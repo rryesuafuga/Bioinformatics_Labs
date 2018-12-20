@@ -63,6 +63,9 @@ mvMORPH::mvOU(tree_phylo, data=carni70$tab$size, model = c("OU1"),
 mvMORPH::mvOU(tree_phylo, data=carni70$tab$range, model = c("OU1"), 
               diagnostic = FALSE, echo = TRUE)
 
+# mvslouchModel(tree_ouch, 
+#               data = as.matrix(cbind(carni70$tab$size,carni70$tab$range)))
+
 
 
 ### 2.2.4 traits evolve as a bivariate Ornstein-Uhlenbeck process
@@ -71,8 +74,8 @@ mvMORPH::mvOU(tree_phylo, data=carni70$tab, model = c("OU1"),
 
 
 ### 2.2.5 size evolves as a Brownian motion and range as an Ornstein Uhlenbeck
-mvslouchModel(tree_ouch, kY=1, 
-              data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
+# mvslouchModel(tree_ouch, kY=1, 
+#               data = as.matrix(cbind(carni70$tab$range,carni70$tab$size)))
 
 
 
