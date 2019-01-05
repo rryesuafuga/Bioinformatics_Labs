@@ -26,6 +26,9 @@ table_rule <- autconDefault$main
 autconDefault$quality
 
 ## 3a 10 cross validations (from Rosetta documentation)
+## According to Wikipedia, cross validation is any of the many model validation
+## techniques for assessing how the results of a statistical analysis will
+## generalize to an independent data set.
 
 ## 3b Johnson (from Rosetta documentation)
 ## A reduct is a minimal subset of attributes such that it preserves
@@ -41,13 +44,17 @@ autconDefault$quality
 
 ## 3e 
 table_rule[1:3,]
+head(table_rule, 10)
 nrow(table_rule) ##number of rules
 
 nrow(table_rule[which(table_rule$PVAL<= 0.05),])
-
+head(table_rule[which(table_rule$PVAL<= 0.05),], 3)
+y <- table_rule[which(table_rule$PVAL<= 0.05),]
+y <- y[order(y$PVAL),]
+head(y, 3)
 
 # 4
-# saveLineByLine(table_rule, "table_rule.txt", 
+# saveLineByLine(table_rule, "table_rule.txt",
 #               discrete=FALSE, filterByPval=FALSE, pval=0.05)
 
 
